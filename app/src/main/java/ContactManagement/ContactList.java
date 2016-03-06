@@ -15,4 +15,6 @@ public interface ContactList {
 
     public boolean removeContact(Contact contact);
 
+    public void saveContacts(Context context);
+
 }

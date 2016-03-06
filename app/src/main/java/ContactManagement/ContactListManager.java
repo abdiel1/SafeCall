@@ -1,8 +1,11 @@
 package ContactManagement;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,7 +30,7 @@ public class ContactListManager implements ContactList{
         contactList = new ArrayList<Contact>();
     }
 
-    public ContactListManager getInstance(){
+    public static ContactListManager getInstance(){
         if(instance == null){
             instance = new ContactListManager();
         }
@@ -37,6 +40,9 @@ public class ContactListManager implements ContactList{
 
     @Override
     public List<Contact> getContactList() {
+        if(contactList.isEmpty()){
+            loadContacts();
+        }
         return contactList;
     }
 
@@ -65,6 +71,8 @@ public class ContactListManager implements ContactList{
     }
 
     private void loadContacts(){
+
+        contactList.clear();
         File file = new File(contactsFile);
         try{
             BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -89,10 +97,11 @@ public class ContactListManager implements ContactList{
         }
     }
 
-    public void saveContacts(){
+    @Override
+    public void saveContacts(Context context){
 
         JSONObject jsonObject;
-        File file = new File(contactsFile);
+        File file = new File(context.getFilesDir(),contactsFile);
         try {
             FileWriter fileWriter = new FileWriter(file);
             try {
@@ -104,14 +113,14 @@ public class ContactListManager implements ContactList{
                     fileWriter.write(jsonObject.toString() + "\n");
                 }
             } catch (JSONException | IOException e) {
-
+                System.out.println(e.getLocalizedMessage());
             } finally {
                 if (fileWriter != null) {
                     fileWriter.close();
                 }
             }
         } catch (IOException e){
-
+            System.out.println(e.getLocalizedMessage());
         }
     }
 }

@@ -32,5 +32,10 @@ public class Contact {
         return phoneNumber;
     }
 
+    public String toString(){
+        return this.name + ": " + this.phoneNumber;
+    }
+
+
 
 }
