@@ -9,12 +9,16 @@ import java.util.List;
  */
 public interface ContactList {
 
-    public List<Contact> getContactList();
+    public List<Contact> getContactList(Context context);
 
     public void addContact(Contact contact);
 
     public boolean removeContact(Contact contact);
 
     public void saveContacts(Context context);
+
+    public int size();
+
+    public void reorderContacts(Contact contact, int position);
 
 }

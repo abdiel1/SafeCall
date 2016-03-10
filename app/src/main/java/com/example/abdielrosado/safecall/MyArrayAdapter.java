@@ -1,7 +1,6 @@
 package com.example.abdielrosado.safecall;
 
 import android.content.Context;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,18 @@ public class MyArrayAdapter extends ArrayAdapter{
     private final Context context;
     private final List<Contact> list;
     private final int layout;
+    private final short action;
 
-    public MyArrayAdapter(Context context, List<Contact> list,int layout){
+    public static final short ADDING_CONTACTS = 0;
+    public static final short REMOVING_CONTACTS = 1;
+    public static final short NONE = 2;
+
+    public MyArrayAdapter(Context context, List<Contact> list,int layout,short action){
         super(context,-1,list);
         this.context = context;
         this.list = list;
         this.layout = layout;
+        this.action = action;
 
     }
 
@@ -45,14 +50,39 @@ public class MyArrayAdapter extends ArrayAdapter{
         name.setText(list.get(position).getName());
         number.setText(list.get(position).getPhoneNumber());
 
-        if(this.layout == R.layout.select_contact){
+        if (this.layout == R.layout.select_contact) {
             CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    AddContactsActivity.addSelection(position);
-                }
-            });
+
+            switch (this.action) {
+                case ADDING_CONTACTS:
+                    checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if(isChecked){
+                                AddContactsActivity.addSelection(position);
+                            } else{
+                                AddContactsActivity.removeSelection(position);
+                            }
+
+                        }
+                    });
+                break;
+
+                case REMOVING_CONTACTS:
+                    checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                        @Override
+                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                            if(isChecked){
+                                RemoveContactsActivity.addSelection(position);
+                            } else{
+                                RemoveContactsActivity.removeSelection(position);
+                            }
+                        }
+                    });
+            }
+
         }
 
 

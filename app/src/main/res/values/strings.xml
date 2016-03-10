@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Safe Call</string>
     <string name="action_settings">Settings</string>
-    <string name="add_remove">Add/Remove Contacts</string>
+    <string name="add">Add Contacts</string>
+    <string name="remove">Remove Contacts</string>
     <string name="title_activity_add_contacts">AddContactsActivity</string>
+    <string name="title_activity_remove__contacts">Remove_Contacts</string>
 </resources>

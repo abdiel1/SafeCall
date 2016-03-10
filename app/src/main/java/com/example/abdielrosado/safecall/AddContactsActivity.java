@@ -31,7 +31,8 @@ public class AddContactsActivity extends AppCompatActivity {
         selected.clear();
 
 
-        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,null,null,null,null);
+        Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                null,null,null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
 
         while (cursor.moveToNext()){
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
@@ -40,7 +41,8 @@ public class AddContactsActivity extends AppCompatActivity {
             contactList.add(contact);
         }
 
-        MyArrayAdapter arrayAdapter = new MyArrayAdapter(this,contactList,R.layout.select_contact);
+        MyArrayAdapter arrayAdapter = new MyArrayAdapter(this,contactList,R.layout.select_contact,
+                MyArrayAdapter.ADDING_CONTACTS);
         listView.setAdapter(arrayAdapter);
 
     }
@@ -49,9 +51,13 @@ public class AddContactsActivity extends AppCompatActivity {
         selected.add(selection);
     }
 
+    public static void removeSelection(int selection){
+        selected.remove(selection);
+    }
+
     public void onAddContactsClicked(View view){
         if(selected.size() == 0){
-            Toast.makeText(this,NO_SELECTION,Toast.LENGTH_SHORT);
+            Toast.makeText(this,NO_SELECTION,Toast.LENGTH_SHORT).show();
         } else{
             ContactList contactListManager = ContactListManager.getInstance();
             for(Integer i : selected){

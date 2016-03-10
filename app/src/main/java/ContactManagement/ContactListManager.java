@@ -39,9 +39,9 @@ public class ContactListManager implements ContactList{
 
 
     @Override
-    public List<Contact> getContactList() {
+    public List<Contact> getContactList(Context context) {
         if(contactList.isEmpty()){
-            loadContacts();
+            loadContacts(context);
         }
         return contactList;
     }
@@ -59,7 +59,7 @@ public class ContactListManager implements ContactList{
         return contactList.remove(contact);
     }
 
-    public void reorderContact(Contact contact, int position){
+    public void reorderContacts(Contact contact, int position){
         if(position < contactList.size() && position >= 0){
             if(contactList.contains(contact)){
                 contactList.remove(contact);
@@ -70,10 +70,10 @@ public class ContactListManager implements ContactList{
         }
     }
 
-    private void loadContacts(){
+    private void loadContacts(Context context){
 
         contactList.clear();
-        File file = new File(contactsFile);
+        File file = new File(context.getFilesDir(),contactsFile);
         try{
             BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             try{
@@ -122,5 +122,10 @@ public class ContactListManager implements ContactList{
         } catch (IOException e){
             System.out.println(e.getLocalizedMessage());
         }
+    }
+
+    @Override
+    public int size() {
+        return contactList.size();
     }
 }

@@ -12,8 +12,16 @@
     tools:context="com.example.abdielrosado.safecall.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:onClick="onClickGoToContacts"
+        android:text="Contacts"
+        android:id="@+id/button3"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="43dp"
+        android:layout_marginEnd="43dp"
+        android:layout_marginBottom="212dp" />
 </RelativeLayout>

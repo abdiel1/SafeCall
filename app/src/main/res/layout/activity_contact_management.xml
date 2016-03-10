@@ -20,11 +20,22 @@
         android:layout_marginTop="101dp" />
 
     <Button
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="70dp"
-        android:text="@string/add_remove"
+        android:text="@string/add"
         android:id="@+id/button"
         android:onClick="onClickAddContacts"
+        android:layout_alignParentTop="true" />
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:text="@string/remove"
+        android:onClick="onClickGoToRemoveContacts"
+        android:id="@+id/button5"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignRight="@+id/listView"
+        android:layout_alignEnd="@+id/listView"
+        android:layout_marginRight="29dp"
+        android:layout_marginEnd="5dp" />
 </RelativeLayout>
