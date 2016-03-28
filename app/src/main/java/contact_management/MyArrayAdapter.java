@@ -1,4 +1,4 @@
-package com.example.abdielrosado.safecall;
+package contact_management;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import ContactManagement.Contact;
+
+import com.example.abdielrosado.safecall.R;
 
 import java.util.List;
 

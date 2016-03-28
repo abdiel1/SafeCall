@@ -1,4 +1,4 @@
-package ContactManagement;
+package contact_management;
 
 import android.content.Context;
 
@@ -120,7 +120,7 @@ public class ContactListManager implements ContactList{
                 }
             }
         } catch (IOException e){
-            System.out.println(e.getLocalizedMessage());
+
         }
     }
 

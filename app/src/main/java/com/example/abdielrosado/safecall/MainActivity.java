@@ -2,13 +2,10 @@ package com.example.abdielrosado.safecall;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import contact_management.ContactListManagement;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,8 +16,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void onClickGoToContacts(View view){
-        Intent intent = new Intent(this,ContactListManagement.class);
+    public void onClickGoToSettings(View view){
+        Intent intent = new Intent(this,Settings.class);
         startActivity(intent);
     }
 

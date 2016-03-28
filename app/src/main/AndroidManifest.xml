@@ -14,21 +14,27 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name="contact_management.ContactListManagement" />
+        <activity
+            android:name="contact_management.AddContactsActivity"
+            android:label="@string/title_activity_add_contacts"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name="contact_management.RemoveContactsActivity"
+            android:label="@string/title_activity_remove__contacts"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Settings"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ContactListManagement" />
-        <activity
-            android:name=".AddContactsActivity"
-            android:label="@string/title_activity_add_contacts"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".RemoveContactsActivity"
-            android:label="@string/title_activity_remove__contacts"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

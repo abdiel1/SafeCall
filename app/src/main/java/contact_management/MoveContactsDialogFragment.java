@@ -1,4 +1,4 @@
-package com.example.abdielrosado.safecall;
+package contact_management;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -10,17 +10,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.NumberPicker;
 
-import ContactManagement.ContactList;
-import ContactManagement.ContactListManager;
+import com.example.abdielrosado.safecall.R;
 
 /**
  * Created by abdielrosado on 3/9/16.
+ * This class adapts the DialogFragment class to be able to use a custom Layout for reordering
+ * contacts.
  */
 public class MoveContactsDialogFragment extends DialogFragment {
 
-
+    /**
+     * This interface defines methods for communicating with classes that need to know
+     * about the events of this class.
+     */
     public interface MoveContactsDialogListener{
+        /**
+         * Notify that the positive button has been clicked.
+         * @param position The new position of the contact.
+         */
         public void onDialogPositiveClick(int position);
+
+        /**
+         * Notify that the negative button has been clicked.
+         */
         public void onDialogNegativeClick();
     }
 
@@ -34,6 +46,7 @@ public class MoveContactsDialogFragment extends DialogFragment {
     public void onAttach(Activity activity){
         super.onAttach(activity);
 
+        // Set the MoveContactsDialogListener
         try {
             moveContactsDialogListener = (MoveContactsDialogListener) activity;
         } catch(ClassCastException e){
@@ -56,8 +69,8 @@ public class MoveContactsDialogFragment extends DialogFragment {
 
 
         //Set number picker parameters
-        final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
-        final ContactList contactList = ContactListManager.getInstance();
+        final  NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
+        ContactList contactList = ContactListManager.getInstance();
         numberPicker.setMaxValue(contactList.size());
         numberPicker.setMinValue(1);
 

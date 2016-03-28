@@ -1,4 +1,4 @@
-package com.example.abdielrosado.safecall;
+package contact_management;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,15 +9,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
-import ContactManagement.*;
+
+import com.example.abdielrosado.safecall.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddContactsActivity extends AppCompatActivity {
 
+    /**
+     * List of the positions of the elements selected in the listView
+     */
     private static List<Integer> selected = new ArrayList<Integer>();
+
+    /**
+     * List of the user's contacts
+     */
     private List<Contact> contactList;
 
+    /**
+     * Message for when the user tries to add contacts and hasn't selected one.
+     */
     private final String NO_SELECTION = "No Contacts Have Been Selected";
 
     @Override
@@ -26,14 +38,16 @@ public class AddContactsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_contacts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        // Get list view and initialize class' lists
         ListView listView = (ListView) findViewById(R.id.listView2);
         contactList = new ArrayList<Contact>();
         selected.clear();
 
-
+        // Get the phone's contacts in ascending order
         Cursor cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                 null,null,null,ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
 
+        // Create contact objects from each of the phone's contacts
         while (cursor.moveToNext()){
             String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
             String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -41,6 +55,7 @@ public class AddContactsActivity extends AppCompatActivity {
             contactList.add(contact);
         }
 
+        // Set the list view adapter
         MyArrayAdapter arrayAdapter = new MyArrayAdapter(this,contactList,R.layout.select_contact,
                 MyArrayAdapter.ADDING_CONTACTS);
         listView.setAdapter(arrayAdapter);
@@ -52,9 +67,13 @@ public class AddContactsActivity extends AppCompatActivity {
     }
 
     public static void removeSelection(int selection){
-        selected.remove(selection);
+        selected.remove((Integer) selection);
     }
 
+    /**
+     * Adds the selected contacts to the contact list
+     * @param view
+     */
     public void onAddContactsClicked(View view){
         if(selected.size() == 0){
             Toast.makeText(this,NO_SELECTION,Toast.LENGTH_SHORT).show();

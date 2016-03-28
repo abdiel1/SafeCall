@@ -15,13 +15,32 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="onClickGoToContacts"
-        android:text="Contacts"
+        android:text="Emergency"
         android:id="@+id/button3"
+        android:layout_marginBottom="125dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="43dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="212dp" />
+        android:layout_toRightOf="@+id/imageButton"
+        android:layout_toEndOf="@+id/imageButton" />
+
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="50dp"
+        android:onClick="onClickGoToSettings"
+        android:src="@drawable/setting"
+        android:id="@+id/imageButton"
+        android:layout_alignTop="@+id/imageButton2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageButton
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/user"
+        android:id="@+id/imageButton2"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/button3"
+        android:layout_alignStart="@+id/button3"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="90dp" />
 </RelativeLayout>

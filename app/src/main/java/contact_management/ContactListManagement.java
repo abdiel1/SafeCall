@@ -1,4 +1,4 @@
-package com.example.abdielrosado.safecall;
+package contact_management;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,11 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import ContactManagement.*;
+
+import com.example.abdielrosado.safecall.R;
+
 import java.util.List;
 
+/**
+ * This class manages the main menu of the contact list.
+ */
 public class ContactListManagement extends AppCompatActivity implements
-        MoveContactsDialogFragment.MoveContactsDialogListener{
+        MoveContactsDialogFragment.MoveContactsDialogListener {
 
     private static ContactListManager contactListManager;
 
@@ -18,6 +23,9 @@ public class ContactListManagement extends AppCompatActivity implements
 
     private List<Contact> contacts;
 
+    /**
+     * Is set to the position of the currently selescted element of the viewList
+     */
     private int currentClickedElement = 0;
 
     private MoveContactsDialogFragment dialogFragment;
@@ -46,11 +54,19 @@ public class ContactListManagement extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Open the activity for adding contacts
+     * @param view
+     */
     public void onClickAddContacts(View view){
         Intent intent = new Intent(this,AddContactsActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Open the activity for removing contacts
+     * @param view
+     */
     public void onClickGoToRemoveContacts(View view){
         Intent intent = new Intent(this,RemoveContactsActivity.class);
         startActivity(intent);

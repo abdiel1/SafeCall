@@ -1,4 +1,4 @@
-package ContactManagement;
+package contact_management;
 
 import android.content.Context;
 

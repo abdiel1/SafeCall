@@ -1,6 +1,4 @@
-package ContactManagement;
-
-import java.util.Objects;
+package com.example;
 
 /**
  * Created by abdielrosado on 3/2/16.
@@ -35,26 +33,7 @@ public class Contact {
     }
 
     public String toString(){
-
         return this.name + ": " + this.phoneNumber;
-    }
-
-    @Override
-    public boolean equals(Object o){
-
-        if(o != null){
-            if(this == o){
-                return true;
-            } else if(o instanceof Contact){
-                Contact c = (Contact) o;
-                if(c.getName().equals(this.getName()) && c.getPhoneNumber().equals(this.getPhoneNumber())){
-                    return true;
-                }
-            } else{
-                return false;
-            }
-        }
-        return false;
     }
 
 

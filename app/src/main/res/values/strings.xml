@@ -5,4 +5,8 @@
     <string name="remove">Remove Contacts</string>
     <string name="title_activity_add_contacts">AddContactsActivity</string>
     <string name="title_activity_remove__contacts">Remove_Contacts</string>
+    <string name="title_activity_settings">settings</string>
+    <string name="on_device_fall_detection">Fall Detection on Wearable Device</string>
+    <string name="on_phone_fall_detection">Fall Detection on Phone</string>
+    <string name="contacts">Contacts</string>
 </resources>

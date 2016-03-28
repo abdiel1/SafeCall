@@ -6,6 +6,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.example.abdielrosado.safecall.SettingsManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,8 @@ import java.util.List;
 public class FallDetectionManager implements FallDetector, SensorEventListener{
 
     private List<FallDetectionListener> fallDetectionListeners = new ArrayList<FallDetectionListener>();
+
+    private float[][] previousValues = new float[3][2];
 
 
 
@@ -59,12 +63,43 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        if(active){
+            if(previousValues[0][0] != 0){
+                float[] slopes = calculateSlope(event.values);
+                if(slopes[0] > 50){
+
+                }
+            }
+
+            long currentTime = System.currentTimeMillis();
+            previousValues[0][0] = event.values[0];
+            previousValues[0][1] = currentTime;
+            previousValues[1][0] = event.values[1];
+            previousValues[1][1] = currentTime;
+            previousValues[2][0] = event.values[2];
+            previousValues[2][1] = currentTime;
+        }
 
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    private float[] calculateSlope(float[] values){
+        float[] slopes = new float[3];
+        long currentTime = System.currentTimeMillis();
+        slopes[0] = Math.abs((values[0] - previousValues[0][0])/
+                (currentTime - previousValues[0][1]));
+
+        slopes[1] = Math.abs((values[1] - previousValues[1][0])/
+                (currentTime - previousValues[1][1]));
+
+        slopes[2] = Math.abs((values[2] - previousValues[2][0])/
+                (currentTime - previousValues[2][1]));
+
+        return slopes;
     }
 
     public boolean isActive() {

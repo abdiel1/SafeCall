@@ -1,21 +1,16 @@
-package com.example.abdielrosado.safecall;
+package contact_management;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.abdielrosado.safecall.R;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import ContactManagement.Contact;
-import ContactManagement.ContactList;
-import ContactManagement.ContactListManager;
 
 public class RemoveContactsActivity extends AppCompatActivity {
 
@@ -44,7 +39,7 @@ public class RemoveContactsActivity extends AppCompatActivity {
     }
 
     public static void removeSelection(int position){
-        selected.remove(position);
+        selected.remove((Integer) position);
     }
 
     public void onClickRemoveContacts(View view){
@@ -67,7 +62,7 @@ public class RemoveContactsActivity extends AppCompatActivity {
             contactListManager.saveContacts(this);
 
             // Go back to the contacts main menu
-            Intent intent = new Intent(this,ContactListManagement.class);
+            Intent intent = new Intent(this, ContactListManagement.class);
             startActivity(intent);
         }
     }
