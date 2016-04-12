@@ -43,4 +43,14 @@
         android:layout_alignStart="@+id/button3"
         android:layout_marginLeft="75dp"
         android:layout_marginTop="90dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Countdown"
+        android:onClick="onCountdownClicked"
+        android:id="@+id/button8"
+        android:layout_above="@+id/button3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

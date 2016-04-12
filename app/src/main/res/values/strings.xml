@@ -9,4 +9,5 @@
     <string name="on_device_fall_detection">Fall Detection on Wearable Device</string>
     <string name="on_phone_fall_detection">Fall Detection on Phone</string>
     <string name="contacts">Contacts</string>
+    <string name="stop">STOP</string>
 </resources>

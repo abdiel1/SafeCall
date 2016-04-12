@@ -6,20 +6,16 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
 
-import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.apache.commons.math3.linear.RealMatrix;
 import org.jscience.mathematics.number.Real;
 import org.jscience.mathematics.vector.DenseMatrix;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by abdielrosado on 3/2/16.
  */
-public class FallDetectionManager implements FallDetector, SensorEventListener{
+public class FallDetectionManager implements FallDetector, SensorEventListener {
 
     private List<FallDetectionListener> fallDetectionListeners = new ArrayList<FallDetectionListener>();
 
@@ -29,8 +25,8 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
 
     //private final double[][] FALL_INVERSE_COVARIANCE_VALUES = {{382.3,-258.2,15.8},{-258.2,756.1,67.9},{15.8,67.9,578.3}};
 
-    private final Real[][] FALL_INVERSE_COVARIANCE_VALUES = {{Real.valueOf(382.3), Real.valueOf(-258.2),Real.valueOf(15.8)},
-            {Real.valueOf(-258.2),Real.valueOf(756.1),Real.valueOf(67.9)},{Real.valueOf(15.8),Real.valueOf(67.9),Real.valueOf(578.3)}};
+    private final Real[][] FALL_INVERSE_COVARIANCE_VALUES = {{Real.valueOf(0.0003823), Real.valueOf(-0.0002582), Real.valueOf(0.0000158)},
+            {Real.valueOf(-0.0002582), Real.valueOf(0.0007561), Real.valueOf(0.0000679)}, {Real.valueOf(0.0000158), Real.valueOf(0.0000679), Real.valueOf(0.0005783)}};
 
     private final DenseMatrix<Real> FALL_INVERSE_COVARIANCE_MATRIX = DenseMatrix.valueOf(FALL_INVERSE_COVARIANCE_VALUES);
 
@@ -39,34 +35,40 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
 //    private final double[][] NON_FALL_INVERSE_COVARIANCE_VALUES = {{0.0132,-0.0036,-0.0047},{-0.0036,0.0054,-0.0001},
 //            {-0.0047,-0.0001,0.0108}};
 
-    private final Real[][] NON_FALL_INVERSE_COVARIANCE_VALUES = {{Real.valueOf(0.0132), Real.valueOf(-0.0036),Real.valueOf(-0.0047)},
-            {Real.valueOf(-0.0036),Real.valueOf(0.0054),Real.valueOf(-0.0001)},{Real.valueOf(-0.0047),Real.valueOf(-0.0001),Real.valueOf(0.0108)}};
+    private final Real[][] NON_FALL_INVERSE_COVARIANCE_VALUES = {{Real.valueOf(0.0132), Real.valueOf(-0.0036), Real.valueOf(-0.0047)},
+            {Real.valueOf(-0.0036), Real.valueOf(0.0054), Real.valueOf(-0.0001)}, {Real.valueOf(-0.0047), Real.valueOf(-0.0001), Real.valueOf(0.0108)}};
 
     private final DenseMatrix<Real> NON_FALL_INVERSE_COVARIANCE_MATRIX = DenseMatrix.valueOf(NON_FALL_INVERSE_COVARIANCE_VALUES);
 
-   // private final RealMatrix NON_FALL_INVERSE_COVARIANCE_MATRIX = new Array2DRowRealMatrix(NON_FALL_INVERSE_COVARIANCE_VALUES);
+    // private final RealMatrix NON_FALL_INVERSE_COVARIANCE_MATRIX = new Array2DRowRealMatrix(NON_FALL_INVERSE_COVARIANCE_VALUES);
 
     //private final double[] FALL_MEANS = {78.5251,52.283,61.5768};
 
-    private final Real[] FALL_MEANS = {Real.valueOf(78.5251),Real.valueOf(52.283),Real.valueOf(61.5768)};
+    private final Real[][] FALL_MEANS = {{Real.valueOf(78.5251)}, {Real.valueOf(52.283)}, {Real.valueOf(61.5768)}};
 
     //private final RealMatrix FALL_MEANS_MATRIX = new Array2DRowRealMatrix(FALL_MEANS);
 
-    private final double[] NON_FALL_MEANS = {10.0271,11.8262,10.1568};
+    private final DenseMatrix<Real> FALL_MEANS_MATRIX = DenseMatrix.valueOf(FALL_MEANS);
 
-    private final RealMatrix NON_FALL_MEANS_MATRIX = new Array2DRowRealMatrix(NON_FALL_MEANS);
+    //private final double[] NON_FALL_MEANS = {10.0271,11.8262,10.1568};
 
-    private boolean active;
+    private final Real[][] NON_FALL_MEANS = {{Real.valueOf(10.0271)}, {Real.valueOf(11.8262)}, {Real.valueOf(10.1568)}};
+
+    //private final RealMatrix NON_FALL_MEANS_MATRIX = new Array2DRowRealMatrix(NON_FALL_MEANS);
+
+    private final DenseMatrix<Real> NON_FALL_MEANS_MATRIX = DenseMatrix.valueOf(NON_FALL_MEANS);
+
+    private volatile boolean alarmOn;
 
     private static FallDetectionManager instance;
 
-    private FallDetectionManager(boolean active){
-        this.active = active;
+    private FallDetectionManager() {
+        alarmOn = false;
     }
 
-    public static FallDetectionManager getInstance(boolean active){
-        if(instance == null){
-            instance = new FallDetectionManager(active);
+    public static FallDetectionManager getInstance() {
+        if (instance == null) {
+            instance = new FallDetectionManager();
         }
 
         return instance;
@@ -75,7 +77,7 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
 
     @Override
     public void registerFallDetectionListener(FallDetectionListener fallDetectionListener) {
-        if(!fallDetectionListeners.contains(fallDetectionListener)){
+        if (!fallDetectionListeners.contains(fallDetectionListener)) {
             fallDetectionListeners.add(fallDetectionListener);
         }
     }
@@ -89,7 +91,7 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
     @Override
     public void notifyFallDetectionListeners() {
 
-        for(FallDetectionListener f : fallDetectionListeners){
+        for (FallDetectionListener f : fallDetectionListeners) {
             f.onFallDetected();
         }
 
@@ -97,35 +99,38 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(active){
-            if(previousValues[0] != 0){
 
-                double[] slopes = calculateSlope(event.values);
-                if(slopes == null){
-                    return;
-                }
-                double fallMahalanobisDistance = calculateMahalanobisDistance(slopes,FALL_INVERSE_COVARIANCE_MATRIX,
-                        FALL_MEANS_MATRIX);
-                double nonFallMahalanobisDistance = calculateMahalanobisDistance(slopes,NON_FALL_INVERSE_COVARIANCE_MATRIX,
-                        NON_FALL_MEANS_MATRIX);
+        if (previousValues[0] != 0) {
 
-
-                //Log.d("Fall",new Double(fallMahalanobisDistance).toString());
-                //Log.d("NoFall", new Double(nonFallMahalanobisDistance).toString());
-                //Log.d("Fallen",new Boolean(fallMahalanobisDistance < nonFallMahalanobisDistance).toString());
-
-                if(fallMahalanobisDistance < nonFallMahalanobisDistance){
-                    Log.d("Fall","Fall was detected");
-                    //notifyFallDetectionListeners();
-                }
-            } else{
-                previous_time = System.currentTimeMillis();
-                previousValues[0] = event.values[0];
-                previousValues[1] = event.values[1];
-                previousValues[2] = event.values[2];
-
+            double[] slopes = calculateSlope(event.values);
+            if (slopes == null) {
+                return;
             }
+
+            Real[][] sample = {{Real.valueOf(slopes[0])}, {Real.valueOf(slopes[1])}, {Real.valueOf(slopes[2])}};
+
+            DenseMatrix<Real> sampleMatrix = DenseMatrix.valueOf(sample);
+            Real fallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, FALL_INVERSE_COVARIANCE_MATRIX,
+                    FALL_MEANS_MATRIX);
+            Real nonFallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, NON_FALL_INVERSE_COVARIANCE_MATRIX,
+                    NON_FALL_MEANS_MATRIX);
+
+
+            if (fallMahalanobisDistance.compareTo(nonFallMahalanobisDistance) == -1 && !alarmOn) {
+                Log.d("Fall", "Fall was detected");
+                //Log.d("FallMD",fallMahalanobisDistance.toString());
+                //Log.d("NFallMD",nonFallMahalanobisDistance.toString());
+                alarmOn = true;
+                notifyFallDetectionListeners();
+            }
+        } else {
+            previous_time = System.currentTimeMillis();
+            previousValues[0] = event.values[0];
+            previousValues[1] = event.values[1];
+            previousValues[2] = event.values[2];
+
         }
+
     }
 
     @Override
@@ -133,14 +138,14 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
 
     }
 
-    private double[] calculateSlope(float[] values){
+    private double[] calculateSlope(float[] values) {
         double[] slopes = new double[3];
 
         Real time = Real.valueOf(System.currentTimeMillis());
         Real timeDifference = time.minus(Real.valueOf(previous_time));
-        Real multiplyFactor = Real.valueOf(100);
+        Real multiplyFactor = Real.valueOf(10);
 
-        if(timeDifference.doubleValue() == 0){
+        if (timeDifference.doubleValue() == 0) {
             return null;
         }
 
@@ -160,7 +165,7 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
 
         //String s = String.format("%s %s %s",values[0],values[1],values[2]);
 
-        //Log.d("Slope ",accelerationDifference.toString() +" " + timeDifference.toString() + " " + slope.toString());
+        //Log.d("Slope ",accelerationDifference +" " + timeDifference.toString());
 
         previous_time = time.longValue();
         previousValues[0] = values[0];
@@ -171,28 +176,22 @@ public class FallDetectionManager implements FallDetector, SensorEventListener{
         return slopes;
     }
 
-    private double calculateMahalanobisDistance(double[] sample, RealMatrix inverseCovariance, RealMatrix mean){
+    private Real calculateMahalanobisDistance(DenseMatrix<Real> sample, DenseMatrix<Real> inverseCovariance, DenseMatrix<Real> mean) {
 
-        RealMatrix sampleMatrix = new Array2DRowRealMatrix(sample);
+        DenseMatrix<Real> temp = sample.minus(mean);
 
-        RealMatrix temp =  sampleMatrix.subtract(mean);
+        DenseMatrix<Real> temp2 = temp.transpose();
 
-        RealMatrix temp2 = temp.transpose();
+        temp2 = temp2.times(inverseCovariance);
 
-        temp2 = temp2.multiply(inverseCovariance);
+        temp2 = temp2.times(temp);
 
-        temp2 = temp2.multiply(temp);
-
-        return temp2.getEntry(0,0);
+        return temp2.get(0, 0);
 
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean value){
-        active = value;
+    public void alarmOff() {
+        alarmOn = false;
     }
 
 
