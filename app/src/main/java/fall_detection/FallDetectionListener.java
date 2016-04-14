@@ -1,4 +1,4 @@
-package FallDetection;
+package fall_detection;
 
 /**
  * Created by abdielrosado on 3/2/16.
