@@ -26,7 +26,7 @@
             android:label="@string/title_activity_remove__contacts"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Settings"
+            android:name=".SettingsManager"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Splash">

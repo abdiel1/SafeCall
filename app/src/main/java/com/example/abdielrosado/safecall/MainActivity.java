@@ -1,5 +1,6 @@
 package com.example.abdielrosado.safecall;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startLocation(){
-        final LocationManagement locationManagement = new LocationManagement(this);
+        final LocationManagement locationManagement = LocationManagement.getInstance(this);
         final Handler handler = new Handler();
 
         handler.post(new Runnable() {

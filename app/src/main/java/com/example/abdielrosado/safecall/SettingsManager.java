@@ -1,6 +1,11 @@
 package com.example.abdielrosado.safecall;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -15,11 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import contact_management.Contact;
+import contact_management.ContactListManagement;
+import contact_management.ContactListManager;
 
 /**
  * Created by abdielrosado on 3/23/16.
  */
-public class SettingsManager {
+public class SettingsManager extends AppCompatActivity {
 
     private static final String SETTINGS_FILE =  "Settings.txt";
 
@@ -31,10 +38,15 @@ public class SettingsManager {
 
     private static SettingsManager instance;
 
-    private SettingsManager(){
+    public SettingsManager(){
         settings = new HashMap<String,Boolean>();
     }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_settings);
 
+    }
     public static SettingsManager getInstance(){
         if(instance == null){
             instance = new SettingsManager();
@@ -98,4 +110,11 @@ public class SettingsManager {
 
         }
     }
+
+    public void onClickGoToContacts(View view){
+        Intent intent = new Intent(this, ContactListManagement.class);
+        startActivity(intent);
+
+    }
+
 }

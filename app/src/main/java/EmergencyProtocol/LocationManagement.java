@@ -26,8 +26,9 @@ public class LocationManagement implements LocationListener {
     private static LocationManager locationManager;
     private static Location myLocation;
     private boolean requestingUpdates;
+    private static LocationManagement locationManagement;
 
-    public LocationManagement(Context context) {
+    private LocationManagement(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         try {
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, GPS_TIME_INTERVAL, 100, this);
@@ -35,6 +36,13 @@ public class LocationManagement implements LocationListener {
 
         }
         requestingUpdates = true;
+    }
+
+    public static LocationManagement getInstance(Context context){
+        if(locationManagement == null){
+            locationManagement = new LocationManagement(context);
+        }
+        return locationManagement;
     }
 
 
