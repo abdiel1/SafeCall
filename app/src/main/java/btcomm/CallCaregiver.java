@@ -14,14 +14,14 @@ public class CallCaregiver
     private TwilioPhone phone;
     private static CallCaregiver callCaregiver;
 
-    private void CallCaregiver(Context context)
+    private CallCaregiver(Context context)
     {
         phone = new TwilioPhone(context);
     }
 
     public static CallCaregiver getInstance(Context context){
         if(callCaregiver == null){
-            callCaregiver = CallCaregiver.getInstance(context);
+            callCaregiver = new CallCaregiver(context);
         }
         return callCaregiver;
     }

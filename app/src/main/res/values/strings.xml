@@ -10,4 +10,5 @@
     <string name="on_phone_fall_detection">Fall Detection on Phone</string>
     <string name="contacts">Contacts</string>
     <string name="stop">STOP</string>
+    <string name="gcm_defaultSenderId">0x7f060034</string>
 </resources>

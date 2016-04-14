@@ -9,6 +9,7 @@ import java.util.List;
 import btcomm.CallCaregiver;
 import contact_management.Contact;
 import contact_management.ContactListManager;
+import gcm.MessageReceiver;
 
 /**
  * Created by Kenneth on 4/14/2016.
@@ -21,6 +22,8 @@ public class EmergencyManager {
 
     private EmergencyManager(Context cont) {
         context = cont;
+
+        MessageReceiver msgReceiver = new MessageReceiver(context);
     }
 
     public static EmergencyManager getInstance(Context cont){
@@ -44,8 +47,9 @@ public class EmergencyManager {
         while(!ackReceived){
             // Make the call
             caregiver.connect(contactList.get(count).getPhoneNumber());
-            if(count < contactList.size()){
+            if(count < contactList.size() - 1){
                 count++;
+                break;
             } else{
                 count = 0;
             }
