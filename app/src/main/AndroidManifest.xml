@@ -90,6 +90,11 @@
             android:exported="false">
         </service>
 
+        <service
+            android:name="com.twilio.client.TwilioClientService"
+            android:exported="false"
+            android:stopWithTask="false" />
+
     </application>
 
 </manifest>

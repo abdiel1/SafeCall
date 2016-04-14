@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
+import EmergencyProtocol.EmergencyManager;
 import EmergencyProtocol.LocationManagement;
 import fall_detection.FallDetectionManagement;
 
@@ -21,7 +22,8 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, FallDetectionManagement.class);
         //startService(intent);
 
-        startLocation();
+        //startLocation();
+        EmergencyManager emergencyManager = EmergencyManager.getInstance(getApplicationContext());
 
 
 
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 locationManagement.requestLocation();
-                handler.postDelayed(this,LocationManagement.GPS_TIME_INTERVAL);
+                handler.postDelayed(this, LocationManagement.GPS_TIME_INTERVAL);
             }
         });
     }

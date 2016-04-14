@@ -55,7 +55,7 @@ public class Countdown extends AppCompatActivity {
         final Handler handler = new Handler();
 
         handler.post(new Runnable() {
-            double count =  15.00;
+            double count =  1.00;
             @Override
             public void run() {
 
@@ -75,7 +75,7 @@ public class Countdown extends AppCompatActivity {
                     ringtone.stop();
                     counter.setText("0");
                     Log.d("False Positive", "NO");
-                    EmergencyManager emergencyManager = EmergencyManager.getInstance(Countdown.this);
+                    EmergencyManager emergencyManager = EmergencyManager.getInstance(getApplicationContext());
                     emergencyManager.startEmergencyProtocol();
                 } else if(stop){
                     counter.setText("STOPPED");

@@ -20,10 +20,13 @@ public class EmergencyManager {
 
     private boolean ackReceived;
 
+    private CallCaregiver caregiver;
+
     private EmergencyManager(Context cont) {
         context = cont;
 
-        MessageReceiver msgReceiver = new MessageReceiver(context);
+//        MessageReceiver msgReceiver = new MessageReceiver(context);
+        caregiver = CallCaregiver.getInstance(context);
     }
 
     public static EmergencyManager getInstance(Context cont){
@@ -38,7 +41,7 @@ public class EmergencyManager {
         String location = locationManagement.getLocation();
 
         //Put send location to server here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        CallCaregiver caregiver = CallCaregiver.getInstance(context);
+
 
         ContactListManager contactListManager = ContactListManager.getInstance();
         List<Contact> contactList = contactListManager.getContactList(context);
@@ -46,10 +49,11 @@ public class EmergencyManager {
         int count = 0;
         while(!ackReceived){
             // Make the call
+
             caregiver.connect(contactList.get(count).getPhoneNumber());
             if(count < contactList.size() - 1){
                 count++;
-                break;
+                //break;
             } else{
                 count = 0;
             }
