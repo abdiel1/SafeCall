@@ -5,7 +5,7 @@
  *  the Twilio Terms of Service located at http://www.twilio.com/legal/tos
  */
 
-package btcomm;
+package twilio;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -14,9 +14,6 @@ import android.util.Log;
 import com.twilio.client.Connection;
 import com.twilio.client.Device;
 import com.twilio.client.Twilio;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;

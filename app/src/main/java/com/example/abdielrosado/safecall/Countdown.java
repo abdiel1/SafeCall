@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import EmergencyProtocol.EmergencyManager;
+import emergency_protocol.EmergencyManager;
 import fall_detection.FallDetectionManager;
 
 
@@ -75,8 +75,8 @@ public class Countdown extends AppCompatActivity {
                     ringtone.stop();
                     counter.setText("0");
                     Log.d("False Positive", "NO");
-                    EmergencyManager emergencyManager = EmergencyManager.getInstance(getApplicationContext());
-                    emergencyManager.startEmergencyProtocol();
+                    Intent intent = new Intent(Countdown.this,EmergencyManager.class);
+                    startActivity(intent);
                 } else if(stop){
                     counter.setText("STOPPED");
                     FallDetectionManager.getInstance().alarmOff();

@@ -5,7 +5,7 @@
  *  the Twilio Terms of Service located at http://www.twilio.com/legal/tos
  */
 
-package btcomm;
+package twilio;
 
 import android.content.Context;
 

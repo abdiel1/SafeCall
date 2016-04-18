@@ -33,19 +33,19 @@ public class MessageReceiver{
 
         context = cont;
 
-//        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
 //                mRegistrationProgressBar.setVisibility(ProgressBar.GONE);
-//                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-//                boolean sentToken = sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
-//                if (sentToken) {
-////                    mInformationTextView.setText(getString(R.string.gcm_send_message));
-//                } else {
-////                    mInformationTextView.setText(getString(R.string.token_error_message));
-//                }
-//            }
-//        };
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
+                if (sentToken) {
+//                    mInformationTextView.setText(getString(R.string.gcm_send_message));
+                } else {
+//                    mInformationTextView.setText(getString(R.string.token_error_message));
+                }
+            }
+        };
         // Registering BroadcastReceiver
         registerReceiver();
 //        registerReceiver(broadcastReceiver, new IntentFilter(MyGcmListenerService.BROADCAST_ACTION));
