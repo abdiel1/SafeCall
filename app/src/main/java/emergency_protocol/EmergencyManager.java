@@ -87,7 +87,6 @@ public class EmergencyManager extends AppCompatActivity{
         int count = 0;
         while(!ackReceived){
             // Make the call
-            //No sirve
             if(!isCallInProgress()){
 //                caregiver.connect(contactList.get(count).getPhoneNumber());
                 callInProgress = true;
