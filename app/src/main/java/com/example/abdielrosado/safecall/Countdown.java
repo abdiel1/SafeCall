@@ -1,10 +1,9 @@
 package com.example.abdielrosado.safecall;
 
-import android.content.Intent;
+import android.content.Context;
 import android.graphics.Color;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,9 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import android.content.Intent;
 import emergency_protocol.EmergencyManager;
 import fall_detection.FallDetectionManager;
+import twilio.TwilioCallActivity;
 
 
 public class Countdown extends AppCompatActivity {
@@ -23,7 +23,7 @@ public class Countdown extends AppCompatActivity {
     private static final String COUNT = "15.00";
     private static final int SLEEP_TIME = 100;
     private static final double INTERVAL = 0.1;
-    private Ringtone ringtone;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +31,10 @@ public class Countdown extends AppCompatActivity {
         setContentView(R.layout.activity_countdown);
 
         stop = false;
-
-        Uri alarm = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        ringtone = RingtoneManager.getRingtone(this,alarm);
-        ringtone.play();
+        mediaPlayer = MediaPlayer.create(this, R.raw.alarmringtone1305);
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),0);
+        mediaPlayer.start();
 
         runTimer();
 
@@ -42,8 +42,8 @@ public class Countdown extends AppCompatActivity {
 
     public void onStopClicked(View view){
         stop = true;
-        if(ringtone.isPlaying()){
-            ringtone.stop();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
         }
     }
 
@@ -71,11 +71,11 @@ public class Countdown extends AppCompatActivity {
                     layout.setBackgroundColor(Color.WHITE);
                 }
 
-                if(count <= 0){
-                    ringtone.stop();
+                if (count <= 0) {
+                    mediaPlayer.stop();
                     counter.setText("0");
                     Log.d("False Positive", "NO");
-                    Intent intent = new Intent(Countdown.this,EmergencyManager.class);
+                    Intent intent = new Intent(Countdown.this, TwilioCallActivity.class);
                     startActivity(intent);
                 } else if(stop){
                     counter.setText("STOPPED");

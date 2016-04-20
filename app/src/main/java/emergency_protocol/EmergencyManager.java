@@ -1,69 +1,49 @@
 package emergency_protocol;
 
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.TextView;
 
-import com.example.abdielrosado.safecall.R;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.List;
 
 import twilio.CallCaregiver;
 import contact_management.Contact;
 import contact_management.ContactListManager;
+import twilio.TwilioCallService;
 
 /**
  * Created by Kenneth on 4/14/2016.
  */
-public class EmergencyManager extends AppCompatActivity{
+public class EmergencyManager{
     private static Context context;
     private static EmergencyManager emergencyManager;
-    private static String TAG = "TWILIOMAINACTIVITY";
-
-
-
     private boolean ackReceived;
     private volatile boolean callInProgress;
+    public static final String ACTION_CALL_STATUS = EmergencyManager.class.getName() + "CallBroadcast";
+    public static final String EXTRA_CONTACT_NAME = "Extra_Contact_Name";
+    public static final String EXTRA_PHONE_NUMBER = "Extra_Phone_Number";
 
     private CallCaregiver caregiver;
 
-    public EmergencyManager() {
 
-    }
     private EmergencyManager(Context cont) {
         context = cont;
-
+        ackReceived = false;
 //        MessageReceiver msgReceiver = new MessageReceiver(context);
         caregiver = CallCaregiver.getInstance(context);
     }
 
-    public static EmergencyManager getInstance(Context cont){
-        if(emergencyManager == null){
+    public static EmergencyManager getInstance(Context cont) {
+        if (emergencyManager == null) {
             emergencyManager = new EmergencyManager(cont);
         }
         return emergencyManager;
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_twilio_main);
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        },2000);
-
-        EmergencyManager emergencyManager = EmergencyManager.getInstance(getApplicationContext());
-        emergencyManager.startEmergencyProtocol();
-
-    }
 
     public boolean isCallInProgress() {
         return callInProgress;
@@ -73,43 +53,49 @@ public class EmergencyManager extends AppCompatActivity{
         this.callInProgress = callInProgress;
     }
 
-    public void startEmergencyProtocol(){
+    public void startEmergencyProtocol() {
         LocationManagement locationManagement = LocationManagement.getInstance(context);
         String location = locationManagement.getLocation();
 
         //Put send location to server here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         ContactListManager contactListManager = ContactListManager.getInstance();
-        List<Contact> contactList = contactListManager.getContactList(context);
+        final List<Contact> contactList = contactListManager.getContactList(context);
 
-       // TextView status = (TextView) findViewById(R.id.call_status);
+        final Handler handler = new Handler();
 
-        int count = 0;
-        while(!ackReceived){
-            // Make the call
+        handler.post(new Runnable() {
+            int count = 0;
+            @Override
+            public void run() {
 
-            if(!isCallInProgress()){
-//                caregiver.connect(contactList.get(count).getPhoneNumber());
-                callInProgress = true;
-               // status.setText(contactList.get(count).getName());
-                if(count < contactList.size() - 1){
-                    count++;
-                    //break;
+                if (!isCallInProgress()) {
+                    Contact contact = contactList.get(count);
+                    String phoneNumber = contact.getPhoneNumber();
+                    String name = contact.getName();
+//                caregiver.connect(phoneNumber);
+                    callInProgress = true;
+                    Intent intent = new Intent(ACTION_CALL_STATUS);
+                    intent.putExtra(EXTRA_CONTACT_NAME,name);
+                    intent.putExtra(EXTRA_PHONE_NUMBER,phoneNumber);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                    Log.d("Service","Intent Sent");
+
+                    if (count < contactList.size() - 1) {
+                        count++;
+                        //break;
+                    } else {
+                        count = 0;
+                    }
+                }
+                if(!ackReceived){
+                    handler.postDelayed(this,2000);
                 } else{
-                    count = 0;
+                    //Send Text Message
                 }
             }
+        });
 
-        }
-
-    }
-
-    public void onClickSetAck(View view){
-        this.ackReceived = true;
-    }
-
-    public void onClickDone(View view){
-        callInProgress = false;
     }
 
 }

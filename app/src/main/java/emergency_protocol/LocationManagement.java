@@ -57,7 +57,7 @@ public class LocationManagement implements LocationListener {
         }
     }
 
-    public String getLocation(){
+    public static String getLocation(){
         if(myLocation != null){
             return myLocation.getLatitude() + " " + myLocation.getLongitude();
         } else{
