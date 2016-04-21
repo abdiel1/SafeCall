@@ -41,7 +41,7 @@ public class TwilioPhone implements Twilio.InitListener
         new RetrieveCapabilityToken().execute("http://maksolutions.herokuapp.com/token");
     }
 
-    public void connect(String phoneNumber){
+    public Device connect(String phoneNumber){
 
         try {
             Map<String, String> parameters = new HashMap<String, String>();
@@ -51,10 +51,13 @@ public class TwilioPhone implements Twilio.InitListener
             if(connection == null){
                 Log.w(TAG, "Failed to create new connection.");
             }
+            return device;
         }
         catch (Exception e){
             Log.d(TAG, e.toString());
         }
+        return null;
+
     }
 
     public void disconnect(){

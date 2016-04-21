@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.twilio.client.Connection;
+import com.twilio.client.Device;
+
 import java.util.List;
 
 import twilio.CallCaregiver;
@@ -65,6 +68,7 @@ public class EmergencyManager{
         final Handler handler = new Handler();
 
         handler.post(new Runnable() {
+            Device device;
             int count = 0;
             @Override
             public void run() {
@@ -73,7 +77,7 @@ public class EmergencyManager{
                     Contact contact = contactList.get(count);
                     String phoneNumber = contact.getPhoneNumber();
                     String name = contact.getName();
-//                caregiver.connect(phoneNumber);
+                    device = caregiver.connect(phoneNumber);
                     callInProgress = true;
                     Intent intent = new Intent(ACTION_CALL_STATUS);
                     intent.putExtra(EXTRA_CONTACT_NAME,name);
@@ -87,8 +91,11 @@ public class EmergencyManager{
                     } else {
                         count = 0;
                     }
+                }else if(device != null && device.getState().equals(Device.State.READY)){
+//                    callInProgress = false;
                 }
                 if(!ackReceived){
+                    Log.d("Device State",device.getState().toString());
                     handler.postDelayed(this,2000);
                 } else{
                     //Send Text Message
