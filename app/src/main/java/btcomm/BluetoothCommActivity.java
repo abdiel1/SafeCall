@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.widget.ShareActionProvider;
 
 import com.example.abdielrosado.safecall.R;
 
@@ -18,10 +17,6 @@ public class BluetoothCommActivity extends AppCompatActivity implements DeviceLi
 
     private BluetoothAdapter blueAdapter;
     private DeviceListFragment mDeviceListFragment;
-
-    private ShareActionProvider shareActionProvider;
-
-    private int currentPos = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

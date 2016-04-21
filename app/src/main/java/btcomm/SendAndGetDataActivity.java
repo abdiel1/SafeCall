@@ -1,11 +1,17 @@
 package btcomm;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.abdielrosado.safecall.MainActivity;
 import com.example.abdielrosado.safecall.R;
 
 import java.io.IOException;
@@ -129,9 +136,10 @@ public class SendAndGetDataActivity extends AppCompatActivity {
                                     Log.d(TAG, "The letter E was received. Time: " + counter);
                                     handler.post(new Runnable() {
                                         public void run() {
-                                            label.setText("The letter E was received."+ counter);
+                                            label.setText("The letter E was received." + counter);
                                         }
                                     });
+
                                 }
                                 else {
                                     readBuffer[readBufferPosition++] = b;
