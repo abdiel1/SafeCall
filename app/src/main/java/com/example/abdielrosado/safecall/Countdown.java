@@ -85,8 +85,6 @@ public class Countdown extends AppCompatActivity {
                 else{
                     handler.postDelayed(this,SLEEP_TIME);
                 }
-
-
             }
         });
     }

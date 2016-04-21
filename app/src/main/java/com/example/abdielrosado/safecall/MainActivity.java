@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickGoToSettings(View view){
-        Intent intent = new Intent(this,SettingsManager.class);
+        Intent intent = new Intent(this,SettingsActivity.class);
         startActivity(intent);
     }
 

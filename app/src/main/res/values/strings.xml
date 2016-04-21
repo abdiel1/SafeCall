@@ -11,4 +11,14 @@
     <string name="contacts">Contacts</string>
     <string name="stop">STOP</string>
     <string name="gcm_defaultSenderId">0x7f060034</string>
+    <string name="no_adapter">No Bluetooth adapter available!</string>
+    <string name="BTopened">Bluetooth opened to</string>
+    <string name="sent">Sent</string>
+    <string name="closed">Closed</string>
+    <string name="MacAdress">Mac address</string>
+    <string name="button_disconnect">Disconnect</string>
+    <string name="button_connect">Connect</string>
+    <string name="title_devices">Devices</string>
+    <string name="scan">Scan</string>
+    <string name="scanning">Scanning...</string>
 </resources>
