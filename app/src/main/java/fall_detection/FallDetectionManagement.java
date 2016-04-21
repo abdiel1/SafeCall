@@ -2,7 +2,6 @@ package fall_detection;
 
 import android.app.Service;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.IBinder;
@@ -10,6 +9,7 @@ import android.os.PowerManager;
 import android.support.annotation.Nullable;
 
 import com.example.abdielrosado.safecall.Countdown;
+import com.example.abdielrosado.safecall.SettingsActivity;
 import com.example.abdielrosado.safecall.SettingsManager;
 
 /**
@@ -21,7 +21,7 @@ public class FallDetectionManagement extends Service implements FallDetectionLis
 
     private static Sensor accelerometer;
 
-    private  SettingsManager settingsManager;
+    private SettingsManager settingsManager;
 
     private static FallDetectionManager fallDetectionManager;
 
@@ -30,7 +30,7 @@ public class FallDetectionManagement extends Service implements FallDetectionLis
     public void onCreate(){
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        settingsManager = SettingsManager.getInstance();
+        settingsManager = SettingsManager.getInstance(this);
         Boolean active =  settingsManager.getSettings(this).get(SettingsManager.ON_PHONE_FALL_DETECTION);
         fallDetectionManager = FallDetectionManager.getInstance();
         fallDetectionManager.registerFallDetectionListener(this);

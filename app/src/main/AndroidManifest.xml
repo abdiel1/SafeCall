@@ -38,7 +38,7 @@
             android:label="@string/title_activity_remove__contacts"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SettingsManager"
+            android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Splash">
@@ -50,6 +50,9 @@
         </activity>
         <activity android:name=".Countdown" />
         <activity android:name="emergency_protocol.EmergencyManager" />
+
+        <activity android:name="btcomm.BluetoothCommActivity" />
+        <activity android:name="btcomm.SendAndGetDataActivity" />
 
         <service
             android:name="fall_detection.FallDetectionManagement"
@@ -91,12 +94,13 @@
         <!-- [END instanceId_listener] -->
         <service
             android:name="gcm.RegistrationIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name="com.twilio.client.TwilioClientService"
             android:exported="false"
             android:stopWithTask="false" />
 
+        <activity android:name="btcomm.BluetoothCommActivity"></activity>
     </application>
 
 </manifest>
