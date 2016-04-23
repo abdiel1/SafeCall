@@ -5,4 +5,11 @@
     <color name="colorAccent">#FF4081</color>
     <color name="background_color">#D4E1F5</color>
     <color name="opening_background">#000000</color>
+
+    <!--for gcm-->
+    <color name="blue_grey_500">#607D8B</color>
+    <color name="blue_grey_600">#546E7A</color>
+    <color name="blue_grey_700">#455A64</color>
+    <color name="blue_grey_800">#37474F</color>
+    <color name="blue_grey_900">#263238</color>
 </resources>

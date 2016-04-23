@@ -49,10 +49,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".Countdown" />
-        <activity android:name="emergency_protocol.EmergencyManager" />
+        <!--<activity android:name="emergency_protocol.EmergencyManager" />-->
 
+        <!--for twilio-->
+        <activity android:name="twilio.TwilioCallActivity"/>
+        <!--for Bluetooth-->
         <activity android:name="btcomm.BluetoothCommActivity" />
         <activity android:name="btcomm.SendAndGetDataActivity" />
+
+        <!--for gcm-->
+        <activity android:name="gcm.MessageReceiverActivity"/>
 
         <service
             android:name="fall_detection.FallDetectionManagement"
@@ -60,21 +66,18 @@
             android:exported="false"
             android:stopWithTask="true" />
 
-        <!-- [START gcm_receiver] -->
+        <!-- gcm_receiver -->
         <receiver
             android:name="com.google.android.gms.gcm.GcmReceiver"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="gcm.play.android.samples.com.gcmquickstart" />
+                <category android:name="gcm" />
             </intent-filter>
         </receiver>
-        <!-- [END gcm_receiver] -->
 
-
-        <!-- [START gcm_listener] -->
+        <!-- gcm_listener -->
         <service
             android:name="gcm.MyGcmListenerService"
             android:exported="false">
@@ -82,8 +85,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <!-- [END gcm_listener] -->
-        <!-- [START instanceId_listener] -->
+        <!-- instanceId_listener -->
         <service
             android:name="gcm.MyInstanceIDListenerService"
             android:exported="false">
@@ -91,19 +93,18 @@
                 <action android:name="com.google.android.gms.iid.InstanceID" />
             </intent-filter>
         </service>
-        <!-- [END instanceId_listener] -->
+        <!--registration service-->
         <service
             android:name="gcm.RegistrationIntentService"
-            android:exported="false"></service>
+            android:exported="false" />
+        <!--For twilio-->
         <service
             android:name="com.twilio.client.TwilioClientService"
             android:exported="false"
             android:stopWithTask="false" />
         <service
             android:name="twilio.TwilioCallService"
-            android:exported="false"></service>
-
-        <activity android:name="btcomm.BluetoothCommActivity"></activity>
+            android:exported="false"/>
     </application>
 
 </manifest>

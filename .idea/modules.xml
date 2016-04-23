@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/SafeCall.iml" filepath="$PROJECT_DIR$/.idea/SafeCall.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/contactlist/contactlist.iml" filepath="$PROJECT_DIR$/contactlist/contactlist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/contactlist/contactlist.iml" filepath="$PROJECT_DIR$/contactlist/contactlist.iml" />
     </modules>
   </component>
 </project>

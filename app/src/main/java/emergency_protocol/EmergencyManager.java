@@ -13,6 +13,7 @@ import com.twilio.client.Device;
 
 import java.util.List;
 
+//import gcm.MessageReceiver;
 import twilio.CallCaregiver;
 import contact_management.Contact;
 import contact_management.ContactListManager;
@@ -22,6 +23,7 @@ import twilio.TwilioCallService;
  * Created by Kenneth on 4/14/2016.
  */
 public class EmergencyManager{
+    private static final String TAG = "EmergencyManager" ;
     private static Context context;
     private static EmergencyManager emergencyManager;
     private boolean ackReceived;
@@ -31,13 +33,15 @@ public class EmergencyManager{
     public static final String EXTRA_PHONE_NUMBER = "Extra_Phone_Number";
 
     private CallCaregiver caregiver;
+//    private MessageReceiver msgReceiver;
 
 
     private EmergencyManager(Context cont) {
         context = cont;
         ackReceived = false;
-//        MessageReceiver msgReceiver = new MessageReceiver(context);
+//        msgReceiver = MessageReceiver.getInstance(context);
         caregiver = CallCaregiver.getInstance(context);
+
     }
 
     public static EmergencyManager getInstance(Context cont) {
@@ -95,6 +99,11 @@ public class EmergencyManager{
 //                    callInProgress = false;
                 }
                 if(!ackReceived){
+                    try{
+                        Log.d("Device State",device.getState().toString());
+                    }catch (NullPointerException e){
+                        Log.d(TAG, "The device not yet created.");
+                    }
                     Log.d("Device State",device.getState().toString());
                     handler.postDelayed(this,2000);
                 } else{

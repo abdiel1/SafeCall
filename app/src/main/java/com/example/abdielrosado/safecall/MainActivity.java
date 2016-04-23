@@ -9,6 +9,7 @@ import android.view.View;
 import emergency_protocol.EmergencyManager;
 import emergency_protocol.LocationManagement;
 import fall_detection.FallDetectionManagement;
+import gcm.MessageReceiverActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, FallDetectionManagement.class);
         //startService(intent);
+
 
         //startLocation();
         EmergencyManager emergencyManager = EmergencyManager.getInstance(getApplicationContext());
@@ -34,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void onCountdownClicked(View view){
         Intent intent = new Intent(this,Countdown.class);
+        startActivity(intent);
+    }
+
+    public void onProfileClicked(View view){
+        Intent intent = new Intent(this, MessageReceiverActivity.class);
         startActivity(intent);
     }
 
