@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package gcm;
+package com.example.abdielrosado.safecall;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -23,19 +23,19 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.example.abdielrosado.safecall.R;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
+import java.util.HashMap;
+
+import twilio.HttpHelper;
 
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
-//    public static final int gcm_defaultSenderId=0x7f060034;
-
 
     public RegistrationIntentService() {
         super(TAG);
@@ -58,7 +58,6 @@ public class RegistrationIntentService extends IntentService {
             // [END get_token]
             Log.i(TAG, "GCM Registration Token: " + token.toString());
 
-            // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);
 
             // Subscribe to topic channels
@@ -90,6 +89,13 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+        try{
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("Id", token);
+            String capabilityToken = HttpHelper.httpPost("http://maksolutions.herokuapp.com/register", params);
+        }catch (Exception e){
+            Log.e(TAG, e.toString());
+        }
     }
 
     /**

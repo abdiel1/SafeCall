@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package gcm;
+package com.example.abdielrosado.safecall;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,8 +26,6 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.example.abdielrosado.safecall.MainActivity;
-import com.example.abdielrosado.safecall.R;
 import com.google.android.gms.gcm.GcmListenerService;
 
 public class MyGcmListenerService extends GcmListenerService {

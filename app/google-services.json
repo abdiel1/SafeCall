@@ -1,17 +1,17 @@
 {
   "project_info": {
-    "project_id": "safe-call-55a5a",
-    "project_number": "279070347374",
-    "name": "Safe Call"
+    "project_id": "safecall-1291",
+    "project_number": "881181504745",
+    "name": "SafeCall"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:279070347374:android:c29d3cbbc2b9d566",
-        "client_id": "android:edu.capstone.maksolutions.safecall",
+        "mobilesdk_app_id": "1:881181504745:android:a06eb5a4aa3247d7",
+        "client_id": "android:com.example.abdielrosado.safecall",
         "client_type": 1,
         "android_client_info": {
-          "package_name": "edu.capstone.maksolutions.safecall",
+          "package_name": "com.example.abdielrosado.safecall",
           "certificate_hash": []
         }
       },

@@ -9,7 +9,6 @@ import android.view.View;
 import emergency_protocol.EmergencyManager;
 import emergency_protocol.LocationManagement;
 import fall_detection.FallDetectionManagement;
-import gcm.MessageReceiverActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,8 +23,6 @@ public class MainActivity extends AppCompatActivity {
 
         //startLocation();
         EmergencyManager emergencyManager = EmergencyManager.getInstance(getApplicationContext());
-
-
 
     }
 

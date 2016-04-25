@@ -1,4 +1,4 @@
-package gcm;
+package com.example.abdielrosado.safecall;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,9 +13,9 @@ import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.abdielrosado.safecall.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 /**
  * Created by Kenneth on 4/14/2016.
@@ -23,7 +23,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 public class MessageReceiverActivity extends AppCompatActivity {
 
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MessageReceiverActivity";
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private ProgressBar mRegistrationProgressBar;
@@ -98,6 +98,7 @@ public class MessageReceiverActivity extends AppCompatActivity {
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
+                Log.i(TAG, "Device is supported. ");
                 apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
             } else {
@@ -116,6 +117,5 @@ public class MessageReceiverActivity extends AppCompatActivity {
 //            mInformationTextView.setText(intent.getStringExtra("message"));
 //        }
 //    };
-
 
 }

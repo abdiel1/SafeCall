@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package gcm;
+package com.example.abdielrosado.safecall;
 
 public class QuickstartPreferences {
 
