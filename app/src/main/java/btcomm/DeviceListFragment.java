@@ -180,6 +180,8 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
         Log.d(TAG, "onItemClick position: " + position + " id: " + id + " name: " + deviceItemsList.get(position).getDeviceName() + "\n");
         if(null != mListener){
             mListener.onFragmentInteraction(deviceItemsList.get(position).getDeviceName());
+            getActivity().unregisterReceiver(blueReceiver);
+            blueAdapter.cancelDiscovery();
         }
         //uuid = "00001101-0000-1000-8000-00805F9B34FB"
     }

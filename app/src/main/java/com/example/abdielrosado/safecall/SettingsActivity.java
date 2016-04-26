@@ -38,6 +38,14 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
+
+
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
         //To toggle the switch for the Fall Detection on wearable device
         final Switch toggleOnWearableDetection = (Switch) findViewById(R.id.switch1);
         final Switch toggleOnPhoneDetection = (Switch) findViewById(R.id.switch2);
@@ -46,16 +54,24 @@ public class SettingsActivity extends AppCompatActivity {
 
         settingsManager = SettingsManager.getInstance(this);
         final Map<String,Boolean> settings = settingsManager.getSettings(this);
-
         Boolean temp = settings.get(SettingsManager.ON_PHONE_FALL_DETECTION);
         toggleOnPhoneDetection.setChecked(temp == null ? false:temp);
         temp = settings.get(SettingsManager.WD_FALL_DETECTION);
 
-        if(!btConnect.isChecked()){
-            toggleOnWearableDetection.setClickable(false);
-        }else{
+
+        if(sendAndGetData.isConnected()){
+            btConnect.setChecked(true);
             toggleOnWearableDetection.setChecked(temp == null ? false:temp);
+            if(toggleOnWearableDetection.isChecked()){
+                sendAndGetData.sendDataToBT("E");
+            }
+        }else{
+            btConnect.setChecked(false);
+            toggleOnWearableDetection.setChecked(false);
+            toggleOnWearableDetection.setClickable(false);
         }
+
+
 
 
 
@@ -111,8 +127,10 @@ public class SettingsActivity extends AppCompatActivity {
                     toggleOnWearableDetection.setClickable(true);
                     Intent intent = new Intent(getApplicationContext(), BluetoothCommActivity.class);
                     startActivity(intent);
-                }else if(sendAndGetData.isConnected()){
+                }else if(!isChecked & sendAndGetData.isConnected()){
                     toggleOnWearableDetection.setClickable(false);
+                    settings.put(SettingsManager.WD_FALL_DETECTION, false);
+                    settingsManager.saveSettings(SettingsActivity.this);
                     sendAndGetData.closeConnectionFromBT();
                 }
             }
@@ -141,6 +159,14 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ContactListManagement.class);
         startActivity(intent);
 
+    }
+
+    @Override
+    public void onDestroy(){
+        if(SendAndGetData.getInstance(this).isConnected()){
+            SendAndGetData.getInstance(this).closeConnectionFromBT();
+        }
+        super.onDestroy();
     }
 
 }
