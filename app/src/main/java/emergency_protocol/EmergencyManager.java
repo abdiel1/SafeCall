@@ -95,7 +95,7 @@ public class EmergencyManager{
                     Contact contact = contactList.get(count);
                     String phoneNumber = contact.getPhoneNumber();
                     String name = contact.getName();
-                    String location = "";
+
                     //Turn on speaker
                     audioManager.setMode(AudioManager.MODE_IN_CALL);
                     audioManager.setSpeakerphoneOn(true);
