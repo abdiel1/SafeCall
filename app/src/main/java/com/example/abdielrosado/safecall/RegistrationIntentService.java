@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package gcm;
+package com.example.abdielrosado.safecall;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -23,19 +23,19 @@ import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.example.abdielrosado.safecall.R;
 import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
+import java.util.HashMap;
+
+import twilio.HttpHelper;
 
 public class RegistrationIntentService extends IntentService {
 
     private static final String TAG = "RegIntentService";
     private static final String[] TOPICS = {"global"};
-    public static final int gcm_defaultSenderId=0x7f060034;
-
 
     public RegistrationIntentService() {
         super(TAG);
@@ -43,6 +43,7 @@ public class RegistrationIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.d(TAG, "onHandleIntent");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
@@ -53,11 +54,10 @@ public class RegistrationIntentService extends IntentService {
             // See https://developers.google.com/cloud-messaging/android/start for details on this file.
             // [START get_token]
             InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(String.valueOf(gcm_defaultSenderId),GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+            String token = instanceID.getToken(String.valueOf(R.string.gcm_defaultSenderId),GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             // [END get_token]
-            Log.i(TAG, "GCM Registration Token: " + token);
+            Log.i(TAG, "GCM Registration Token: " + token.toString());
 
-            // TODO: Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);
 
             // Subscribe to topic channels
@@ -89,6 +89,13 @@ public class RegistrationIntentService extends IntentService {
      */
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+        try{
+            HashMap<String, String> params = new HashMap<String, String>();
+            params.put("Id", token);
+            String capabilityToken = HttpHelper.httpPost("http://maksolutions.herokuapp.com/register", params);
+        }catch (Exception e){
+            Log.e(TAG, e.toString());
+        }
     }
 
     /**
@@ -99,6 +106,7 @@ public class RegistrationIntentService extends IntentService {
      */
     // [START subscribe_topics]
     private void subscribeTopics(String token) throws IOException {
+        Log.d(TAG, "Inside subscribeTopics");
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
         for (String topic : TOPICS) {
             pubSub.subscribe(token, "/topics/" + topic, null);

@@ -10,7 +10,6 @@
     <string name="on_phone_fall_detection">Fall Detection on Phone</string>
     <string name="contacts">Contacts</string>
     <string name="stop">STOP</string>
-    <string name="gcm_defaultSenderId">0x7f060034</string>
     <string name="no_adapter">No Bluetooth adapter available!</string>
     <string name="BTopened">Bluetooth opened to</string>
     <string name="sent">Sent</string>
@@ -21,4 +20,10 @@
     <string name="title_devices">Devices</string>
     <string name="scan">Scan</string>
     <string name="scanning">Scanning...</string>
+
+    <!--for gcm-->
+    <string name="registering_message">Generating InstanceID token...</string>
+    <string name="gcm_send_message">Waiting for notification</string>
+    <string name="token_error_message">Error ...</string>
+
 </resources>

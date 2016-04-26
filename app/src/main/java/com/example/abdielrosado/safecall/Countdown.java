@@ -17,6 +17,7 @@ import fall_detection.FallDetectionManager;
 import twilio.TwilioCallActivity;
 
 
+
 public class Countdown extends AppCompatActivity {
 
     private volatile boolean stop;
@@ -31,10 +32,10 @@ public class Countdown extends AppCompatActivity {
         setContentView(R.layout.activity_countdown);
 
         stop = false;
-        mediaPlayer = MediaPlayer.create(this, R.raw.alarmringtone1305);
-        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),0);
-        mediaPlayer.start();
+//        mediaPlayer = MediaPlayer.create(this, R.raw.alarmringtone1305);
+//        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+//        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),0);
+//        mediaPlayer.start();
 
         runTimer();
 
@@ -42,9 +43,9 @@ public class Countdown extends AppCompatActivity {
 
     public void onStopClicked(View view){
         stop = true;
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
+//        if (mediaPlayer.isPlaying()) {
+//            mediaPlayer.stop();
+//        }
     }
 
     private void runTimer(){
@@ -72,7 +73,7 @@ public class Countdown extends AppCompatActivity {
                 }
 
                 if (count <= 0) {
-                    mediaPlayer.stop();
+//                    mediaPlayer.stop();
                     counter.setText("0");
                     Log.d("False Positive", "NO");
                     Intent intent = new Intent(Countdown.this, TwilioCallActivity.class);
