@@ -4,6 +4,7 @@ package emergency_protocol;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
@@ -13,6 +14,7 @@ import com.twilio.client.Connection;
 import com.twilio.client.Device;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import twilio.CallCaregiver;
 import contact_management.Contact;
@@ -27,8 +29,9 @@ public class EmergencyManager{
     private static final String EMERGENCY_MESSAGE = "Necesito ayuda. Me encuentro en: ";
     private static Context context;
     private static EmergencyManager emergencyManager;
-    private boolean ackReceived;
-    private volatile boolean callInProgress;
+    private static AudioManager audioManager;
+    private AtomicBoolean ackReceived;
+    private AtomicBoolean callInProgress;
     public static final String ACTION_CALL_STATUS = EmergencyManager.class.getName() + "CallBroadcast";
     public static final String EXTRA_CONTACT_NAME = "Extra_Contact_Name";
     public static final String EXTRA_PHONE_NUMBER = "Extra_Phone_Number";
@@ -38,9 +41,11 @@ public class EmergencyManager{
 
     private EmergencyManager(Context cont) {
         context = cont;
-        ackReceived = false;
+        ackReceived = new AtomicBoolean(false);
+        callInProgress = new AtomicBoolean(false);
 //        MessageReceiver msgReceiver = new MessageReceiver(context);
         caregiver = CallCaregiver.getInstance(context);
+        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
 
     public static EmergencyManager getInstance(Context cont) {
@@ -52,11 +57,14 @@ public class EmergencyManager{
 
 
     public boolean isCallInProgress() {
-        return callInProgress;
+        return callInProgress.get();
     }
 
     public void setCallInProgress(boolean callInProgress) {
-        this.callInProgress = callInProgress;
+        if(isCallInProgress()){
+            caregiver.disconnect();
+            this.callInProgress.set(callInProgress);
+        }
     }
 
     public void startEmergencyProtocol() {
@@ -78,8 +86,13 @@ public class EmergencyManager{
                 if (!isCallInProgress()) {
                     String phoneNumber = contact.getPhoneNumber();
                     String name = contact.getName();
+
+                    //Turn on speaker
+                    audioManager.setMode(AudioManager.MODE_IN_CALL);
+                    audioManager.setSpeakerphoneOn(true);
+
                     device = caregiver.connect(phoneNumber);
-                    callInProgress = true;
+                    callInProgress.set(true);
                     Intent intent = new Intent(ACTION_CALL_STATUS);
                     intent.putExtra(EXTRA_CONTACT_NAME,name);
                     intent.putExtra(EXTRA_PHONE_NUMBER,phoneNumber);
@@ -95,7 +108,7 @@ public class EmergencyManager{
                 }else if(device != null && device.getState().equals(Device.State.READY)){
 //                    callInProgress = false;
                 }
-                if(!ackReceived){
+                if(!isAckReceived()){
                     Log.d("Device State",device.getState().toString());
                     handler.postDelayed(this,2000);
                 } else{
@@ -104,10 +117,21 @@ public class EmergencyManager{
                     SmsManager smsManager = SmsManager.getDefault();
                     smsManager.sendTextMessage(contact.getPhoneNumber(),null,message,null,null);
 
+                    //Turn off speaker
+                    audioManager.setMode(AudioManager.MODE_NORMAL);
+
                 }
             }
         });
 
+    }
+
+    public boolean isAckReceived() {
+        return ackReceived.get();
+    }
+
+    public void setAckReceived(boolean ackReceived) {
+        this.ackReceived.set(ackReceived);
     }
 
 }

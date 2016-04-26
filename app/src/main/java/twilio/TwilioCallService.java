@@ -55,5 +55,9 @@ public class TwilioCallService extends Service {
         emergencyManager.setCallInProgress(false);
     }
 
+    public void acknowledgementReceived(){
+        emergencyManager.setAckReceived(true);
+    }
+
 
 }

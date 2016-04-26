@@ -40,6 +40,21 @@ public class TwilioCallActivity extends AppCompatActivity{
                 status.setText(intent.getStringExtra(EmergencyManager.EXTRA_CONTACT_NAME));
             }
         },new IntentFilter(EmergencyManager.ACTION_CALL_STATUS));
+        //Get Intent
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+
+        if(Intent.ACTION_SEND.equals(action)&& type != null){
+            if("text/plain".equals(type)){
+                if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("ack")){
+                    twilioCallService.acknowledgementReceived();
+                } else if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("completed")){
+                    twilioCallService.stopCall();
+                }
+
+            }
+        }
     }
 
     @Override
