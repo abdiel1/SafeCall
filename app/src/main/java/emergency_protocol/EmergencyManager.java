@@ -91,7 +91,7 @@ public class EmergencyManager{
                     audioManager.setMode(AudioManager.MODE_IN_CALL);
                     audioManager.setSpeakerphoneOn(true);
 
-                    device = caregiver.connect(phoneNumber);
+                    //device = caregiver.connect(phoneNumber);
                     callInProgress.set(true);
                     Intent intent = new Intent(ACTION_CALL_STATUS);
                     intent.putExtra(EXTRA_CONTACT_NAME,name);
@@ -105,11 +105,8 @@ public class EmergencyManager{
                     } else {
                         count = 0;
                     }
-                }else if(device != null && device.getState().equals(Device.State.READY)){
-//                    callInProgress = false;
                 }
                 if(!isAckReceived()){
-                    Log.d("Device State",device.getState().toString());
                     handler.postDelayed(this,2000);
                 } else{
                     //Send Text Message

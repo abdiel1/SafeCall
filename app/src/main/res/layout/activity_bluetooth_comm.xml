@@ -8,6 +8,7 @@
     tools:context="btcomm.BluetoothCommActivity">
 
 
+    <include layout="@layout/app_bar"/>
     <include layout="@layout/activity_bluetooth_comm_container" />
 
 </android.support.design.widget.CoordinatorLayout>

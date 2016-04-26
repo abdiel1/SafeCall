@@ -17,6 +17,8 @@ import android.widget.TextView;
 
 import com.example.abdielrosado.safecall.R;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import emergency_protocol.EmergencyManager;
 
 /**
@@ -25,8 +27,8 @@ import emergency_protocol.EmergencyManager;
 public class TwilioCallActivity extends AppCompatActivity{
 
     private TextView status;
-    private TwilioCallService twilioCallService;
-    private boolean isBound;
+    private static TwilioCallService twilioCallService;
+    private static AtomicBoolean isBound = new AtomicBoolean(false);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,12 +49,13 @@ public class TwilioCallActivity extends AppCompatActivity{
 
         if(Intent.ACTION_SEND.equals(action)&& type != null){
             if("text/plain".equals(type)){
-                if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("ack")){
-                    twilioCallService.acknowledgementReceived();
-                } else if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("completed")){
-                    twilioCallService.stopCall();
+                if(isBound.get()){
+                    if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("ack")){
+                        twilioCallService.acknowledgementReceived();
+                    } else if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("completed")){
+                        twilioCallService.stopCall();
+                    }
                 }
-
             }
         }
     }
@@ -67,7 +70,7 @@ public class TwilioCallActivity extends AppCompatActivity{
     @Override
     protected void onStop() {
         super.onStop();
-        if (isBound) {
+        if (isBound.get()) {
             doUnbindService();
         }
     }
@@ -77,7 +80,7 @@ public class TwilioCallActivity extends AppCompatActivity{
     }
 
     public void onClickDone(View view) {
-        if (isBound) {
+        if (isBound.get()) {
             twilioCallService.stopCall();
         }
 
@@ -100,13 +103,13 @@ public class TwilioCallActivity extends AppCompatActivity{
     private void doBindService() {
         Intent intent = new Intent(this, TwilioCallService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        isBound = true;
+        isBound.set(true);
     }
 
     private void doUnbindService() {
-        if (isBound) {
+        if (isBound.get()) {
             unbindService(serviceConnection);
-            isBound = false;
+            isBound.set(false);
         }
     }
 

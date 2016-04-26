@@ -120,7 +120,7 @@ public class Countdown extends AppCompatActivity {
                     counter.setText("0");
                     Log.d("False Positive", "NO");
                     Intent intent = new Intent(Countdown.this, TwilioCallActivity.class);
-                    //startActivity(intent);
+                    startActivity(intent);
                     runningTimer.set(false);
                 } else if(stop){
                     counter.setText("STOPPED");

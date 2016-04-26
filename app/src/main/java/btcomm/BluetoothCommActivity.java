@@ -24,7 +24,7 @@ public class BluetoothCommActivity extends AppCompatActivity implements DeviceLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bluetooth_comm_container);
+        setContentView(R.layout.activity_bluetooth_comm);
         setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

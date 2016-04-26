@@ -48,6 +48,8 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
 
     private ArrayAdapter<DeviceItem> mAdapter;
 
+    private IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -98,6 +100,9 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
             Log.d(TAG, "DeviceList populated\n");
 
             mAdapter = new DeviceListAdapter(getActivity(), deviceItemsList, blueAdapter);
+            mAdapter.clear();
+            getActivity().registerReceiver(blueReceiver, filter);
+            blueAdapter.startDiscovery();
 
             Log.d(TAG, "Adapter created\n");
         }
@@ -126,6 +131,7 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_deviceitem_list, container, false);
         ToggleButton scan = (ToggleButton) view.findViewById(R.id.scan);
+        scan.setChecked(true);
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
@@ -136,7 +142,6 @@ public class DeviceListFragment extends Fragment implements AbsListView.OnItemCl
         scan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
                 if (isChecked){
                     mAdapter.clear();
                     getActivity().registerReceiver(blueReceiver, filter);

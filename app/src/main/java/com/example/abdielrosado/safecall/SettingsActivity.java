@@ -10,10 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.ToggleButton;
 
 import java.util.Map;
 
 import btcomm.BluetoothCommActivity;
+import btcomm.SendAndGetData;
 import contact_management.ContactListManagement;
 import fall_detection.FallDetectionManagement;
 
@@ -27,6 +29,7 @@ public class SettingsActivity extends AppCompatActivity {
     private SettingsManager settingsManager;
     private Toolbar toolbar;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,8 @@ public class SettingsActivity extends AppCompatActivity {
         //To toggle the switch for the Fall Detection on wearable device
         final Switch toggleOnWearableDetection = (Switch) findViewById(R.id.switch1);
         final Switch toggleOnPhoneDetection = (Switch) findViewById(R.id.switch2);
+        final ToggleButton btConnect = (ToggleButton) findViewById(R.id.BT_toggle);
+        final SendAndGetData sendAndGetData = SendAndGetData.getInstance(SettingsActivity.this);
 
         settingsManager = SettingsManager.getInstance(this);
         final Map<String,Boolean> settings = settingsManager.getSettings(this);
@@ -45,20 +50,30 @@ public class SettingsActivity extends AppCompatActivity {
         Boolean temp = settings.get(SettingsManager.ON_PHONE_FALL_DETECTION);
         toggleOnPhoneDetection.setChecked(temp == null ? false:temp);
         temp = settings.get(SettingsManager.WD_FALL_DETECTION);
-        toggleOnWearableDetection.setChecked(temp == null ? false:temp);
+
+        if(!btConnect.isChecked()){
+            toggleOnWearableDetection.setClickable(false);
+        }else{
+            toggleOnWearableDetection.setChecked(temp == null ? false:temp);
+        }
+
+
 
         toggleOnWearableDetection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // The toggle is enabled
-                    Log.d(TAG, "The Bluetooth activity will be called.");
-                    Intent intent = new Intent(getApplicationContext(), BluetoothCommActivity.class);
-                    startActivity(intent);
+                    if(sendAndGetData.isConnected()){
+                        sendAndGetData.sendDataToBT("E");
+                    }
                     toggleOnWearableDetection.setChecked(true);
                     settings.put(SettingsManager.WD_FALL_DETECTION, true);
                     settingsManager.saveSettings(SettingsActivity.this);
                 } else {
                     // The toggle is disabled
+                    if(sendAndGetData.isConnected()){
+                        sendAndGetData.sendDataToBT("D");
+                    }
                     toggleOnWearableDetection.setChecked(false);
                     settings.put(SettingsManager.WD_FALL_DETECTION, false);
                     settingsManager.saveSettings(SettingsActivity.this);
@@ -85,6 +100,20 @@ public class SettingsActivity extends AppCompatActivity {
                     settingsManager.saveSettings(SettingsActivity.this);
                     stopService(new Intent(SettingsActivity.this, FallDetectionManagement.class));
 
+                }
+            }
+        });
+
+        btConnect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked & !sendAndGetData.isConnected()){
+                    toggleOnWearableDetection.setClickable(true);
+                    Intent intent = new Intent(getApplicationContext(), BluetoothCommActivity.class);
+                    startActivity(intent);
+                }else if(sendAndGetData.isConnected()){
+                    toggleOnWearableDetection.setClickable(false);
+                    sendAndGetData.closeConnectionFromBT();
                 }
             }
         });

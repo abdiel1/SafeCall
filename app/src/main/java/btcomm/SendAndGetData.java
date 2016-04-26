@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.abdielrosado.safecall.Countdown;
 import com.example.abdielrosado.safecall.R;
@@ -20,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Kenneth on 3/25/2016.
@@ -42,11 +44,14 @@ public class SendAndGetData {
 
     byte[] readBuffer;
     int readBufferPosition;
-    volatile boolean stopListeningThread;
+    private AtomicBoolean stopListeningThread;
+    private AtomicBoolean connected;
 
 
     public SendAndGetData(Context c){
         context = c;
+        stopListeningThread = new AtomicBoolean(false);
+        connected = new AtomicBoolean(false);
     }
 
 
@@ -58,8 +63,10 @@ public class SendAndGetData {
     }
 
     public void start(String id){
-        findBluetoothDevices(id);
-        openConnectionToBT();
+        if(!connected.get()){
+            findBluetoothDevices(id);
+            openConnectionToBT();
+        }
     }
 
 
@@ -90,6 +97,9 @@ public class SendAndGetData {
             BTSocket.connect();
             output = BTSocket.getOutputStream();
             input = BTSocket.getInputStream();
+            connected.set(true);
+
+            Toast.makeText(context,"Connected to: " + BTDevice.getName(),Toast.LENGTH_LONG).show();
 
             beginListenForData();
 
@@ -102,12 +112,12 @@ public class SendAndGetData {
     void beginListenForData() {
         final Handler handler = new Handler();
 
-        stopListeningThread = false;
+        stopListeningThread.set(false);
         readBufferPosition = 0;
         readBuffer = new byte[1024];
         listeningThread = new Thread(new Runnable() {
             public void run() {
-                while(!Thread.currentThread().isInterrupted() && !stopListeningThread) {
+                while(!Thread.currentThread().isInterrupted() && !stopListeningThread.get()) {
                     try {
                         int bytesAvailable = input.available();
                         if(bytesAvailable > 0) {
@@ -139,7 +149,7 @@ public class SendAndGetData {
                         }
                     }
                     catch (IOException e) {
-                        stopListeningThread = true;
+                        stopListeningThread.set(true);
                         Log.e(TAG, e.toString());
 
                     }
@@ -151,23 +161,33 @@ public class SendAndGetData {
 
     public void sendDataToBT(String message) {
         try {
-            message += "\n";
-            output.write(message.getBytes());
+            if(connected.get()){
+                message += "\n";
+                output.write(message.getBytes());
+            }
+
         }catch (IOException e){
             Log.e(TAG, e.toString());
         }
     }
 
-    void closeConnectionFromBT() {
+    public void closeConnectionFromBT() {
         try {
-            stopListeningThread = true;
-            output.close();
-            input.close();
-            BTSocket.close();
+            if(connected.get()){
+                stopListeningThread.set(true);
+                output.close();
+                input.close();
+                BTSocket.close();
+                connected.set(false);
+            }
         }
         catch (IOException e){
             Log.e(TAG, e.toString());
         }
+    }
+
+    public boolean isConnected(){
+        return connected.get();
     }
 
 }
