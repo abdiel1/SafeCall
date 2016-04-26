@@ -14,6 +14,7 @@ import com.twilio.client.Connection;
 import com.twilio.client.Device;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
 
 //import gcm.MessageReceiver;
@@ -94,9 +95,11 @@ public class EmergencyManager{
                     Contact contact = contactList.get(count);
                     String phoneNumber = contact.getPhoneNumber();
                     String name = contact.getName();
+                    String location = "";
                     //Turn on speaker
                     audioManager.setMode(AudioManager.MODE_IN_CALL);
                     audioManager.setSpeakerphoneOn(true);
+                    HashMap<String, String> params = new HashMap<String, String>();
 
 //                    device = caregiver.connect(phoneNumber);
                     callInProgress = true;
