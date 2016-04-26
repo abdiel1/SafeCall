@@ -24,7 +24,6 @@ import emergency_protocol.EmergencyManager;
  */
 public class TwilioCallActivity extends AppCompatActivity{
 
-    private static final String TAG = "TwilioCallActivity";
     private TextView status;
     private TwilioCallService twilioCallService;
     private boolean isBound;
@@ -37,23 +36,10 @@ public class TwilioCallActivity extends AppCompatActivity{
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d(TAG,"Intent Received");
+                Log.d("Activity","Intent Received");
                 status.setText(intent.getStringExtra(EmergencyManager.EXTRA_CONTACT_NAME));
             }
         },new IntentFilter(EmergencyManager.ACTION_CALL_STATUS));
-
-        //Get Intent
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-
-        if(Intent.ACTION_SEND.equals(action)&& type != null){
-            if("text/plain".equals(type)){
-                Intent intentUpdate = new Intent(EmergencyManager.ACTION_CALL_STATUS);
-                intentUpdate.putExtra(EmergencyManager.EXTRA_CONTACT_NAME,intent.getStringExtra(Intent.EXTRA_TEXT));
-                LocalBroadcastManager.getInstance(this).sendBroadcast(intentUpdate);
-            }
-        }
     }
 
     @Override
@@ -72,9 +58,7 @@ public class TwilioCallActivity extends AppCompatActivity{
     }
 
     public void onClickSetAck(View view) {
-        if(isBound){
-            twilioCallService.ackReceived();
-        }
+
     }
 
     public void onClickDone(View view) {

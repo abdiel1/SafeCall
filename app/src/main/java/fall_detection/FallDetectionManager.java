@@ -37,13 +37,13 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
 //    private final double[][] NON_FALL_INVERSE_COVARIANCE_VALUES = {{0.0132,-0.0036,-0.0047},{-0.0036,0.0054,-0.0001},
 //            {-0.0047,-0.0001,0.0108}};
 
-//    private final Real[][] NON_FALL_INVERSE_COVARIANCE_VALUES = {{Real.valueOf(0.00584466950764467), Real.valueOf(-0.001246764431), Real.valueOf(-0.001718949159)},
-//            {Real.valueOf(-0.001246764431), Real.valueOf(0.003938964257), Real.valueOf(-0.0008250059424)},
-//            {Real.valueOf(-0.001718949159), Real.valueOf(-0.0008250059424), Real.valueOf(0.004164093876)}};
-//
-//    private final DenseMatrix<Real> NON_FALL_INVERSE_COVARIANCE_MATRIX = DenseMatrix.valueOf(NON_FALL_INVERSE_COVARIANCE_VALUES);
+    private final Real[][] NON_FALL_INVERSE_COVARIANCE_VALUES = {{Real.valueOf(0.00584466950764467), Real.valueOf(-0.001246764431), Real.valueOf(-0.001718949159)},
+            {Real.valueOf(-0.001246764431), Real.valueOf(0.003938964257), Real.valueOf(-0.0008250059424)},
+            {Real.valueOf(-0.001718949159), Real.valueOf(-0.0008250059424), Real.valueOf(0.004164093876)}};
 
-    // private final RealMatrix NON_FALL_INVERSE_COVARIANCE_MATRIX = new Array2DRowRealMatrix(NON_FALL_INVERSE_COVARIANCE_VALUES);
+    private final DenseMatrix<Real> NON_FALL_INVERSE_COVARIANCE_MATRIX = DenseMatrix.valueOf(NON_FALL_INVERSE_COVARIANCE_VALUES);
+
+//     private final RealMatrix NON_FALL_INVERSE_COVARIANCE_MATRIX = new Array2DRowRealMatrix(NON_FALL_INVERSE_COVARIANCE_VALUES);
 
     //private final double[] FALL_MEANS = {78.5251,52.283,61.5768};
 
@@ -53,13 +53,13 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
 
     private final DenseMatrix<Real> FALL_MEANS_MATRIX = DenseMatrix.valueOf(FALL_MEANS);
 
-    //private final double[] NON_FALL_MEANS = {10.0271,11.8262,10.1568};
+//    private final double[] NON_FALL_MEANS = {10.0271,11.8262,10.1568};
 
-//    private final Real[][] NON_FALL_MEANS = {{Real.valueOf(13.3182)}, {Real.valueOf(14.1203)}, {Real.valueOf(13.6385)}};
-//
-//    //private final RealMatrix NON_FALL_MEANS_MATRIX = new Array2DRowRealMatrix(NON_FALL_MEANS);
-//
-//    private final DenseMatrix<Real> NON_FALL_MEANS_MATRIX = DenseMatrix.valueOf(NON_FALL_MEANS);
+    private final Real[][] NON_FALL_MEANS = {{Real.valueOf(13.3182)}, {Real.valueOf(14.1203)}, {Real.valueOf(13.6385)}};
+
+    //private final RealMatrix NON_FALL_MEANS_MATRIX = new Array2DRowRealMatrix(NON_FALL_MEANS);
+
+    private final DenseMatrix<Real> NON_FALL_MEANS_MATRIX = DenseMatrix.valueOf(NON_FALL_MEANS);
 
     private AtomicBoolean alarmOn;
 
@@ -117,15 +117,15 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
             DenseMatrix<Real> sampleMatrix = DenseMatrix.valueOf(sample);
             Real fallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, FALL_INVERSE_COVARIANCE_MATRIX,
                     FALL_MEANS_MATRIX);
-//            Real nonFallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, NON_FALL_INVERSE_COVARIANCE_MATRIX,
-//                    NON_FALL_MEANS_MATRIX);
+            Real nonFallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, NON_FALL_INVERSE_COVARIANCE_MATRIX,
+                    NON_FALL_MEANS_MATRIX);
 
 
 
-            Log.d("Mahalanobis",fallMahalanobisDistance.toString() + ", " + multiplyFactor.toString());
+            Log.d("Mahalanobis",fallMahalanobisDistance.toString() + ", " + nonFallMahalanobisDistance.toString());
 
             synchronized (this){
-                if ((fallMahalanobisDistance.doubleValue() < 1) && !alarmOn.get()) {
+                if ((fallMahalanobisDistance.minus(nonFallMahalanobisDistance).doubleValue() < -50) && !alarmOn.get()) {
                     Log.d("Fall", "Fall was detected");
                     //Log.d("FallMD",fallMahalanobisDistance.toString());
                     //Log.d("NFallMD",nonFallMahalanobisDistance.toString());

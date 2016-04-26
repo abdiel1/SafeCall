@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.abdielrosado.safecall;
+package gcm;
 
 import android.content.Intent;
 

@@ -12,6 +12,8 @@ import com.example.abdielrosado.safecall.Countdown;
 import com.example.abdielrosado.safecall.SettingsActivity;
 import com.example.abdielrosado.safecall.SettingsManager;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Created by abdielrosado on 4/3/16.
  */
@@ -27,6 +29,8 @@ public class FallDetectionManagement extends Service implements FallDetectionLis
 
     private PowerManager.WakeLock wakeLock;
 
+    public static AtomicBoolean isRunning = new AtomicBoolean(false);
+
     public void onCreate(){
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -39,6 +43,7 @@ public class FallDetectionManagement extends Service implements FallDetectionLis
         PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"MyWakeLockTag");
         wakeLock.acquire();
+        isRunning.set(true);
     }
 
 
@@ -60,6 +65,7 @@ public class FallDetectionManagement extends Service implements FallDetectionLis
         fallDetectionManager.removeFallDetectionListener(this);
         sensorManager.unregisterListener(fallDetectionManager);
         wakeLock.release();
+        isRunning.set(false);
 
     }
 

@@ -3,10 +3,14 @@ package contact_management;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.abdielrosado.safecall.MainActivity;
 import com.example.abdielrosado.safecall.R;
 
 import java.util.ArrayList;
@@ -21,7 +25,9 @@ public class RemoveContactsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_remove__contacts);
+        setContentView(R.layout.activity_remove_contacts);
+        setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         selected.clear();
 
@@ -32,6 +38,23 @@ public class RemoveContactsActivity extends AppCompatActivity {
 
         listView.setAdapter(arrayAdapter);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.home:
+                startActivity(new Intent(this,MainActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public static void addSelection(int position){

@@ -7,8 +7,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 
+import com.example.abdielrosado.safecall.MainActivity;
 import com.example.abdielrosado.safecall.R;
 
 public class BluetoothCommActivity extends AppCompatActivity implements DeviceListFragment.OnFragmentInteractionListener{
@@ -22,6 +25,8 @@ public class BluetoothCommActivity extends AppCompatActivity implements DeviceLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_comm_container);
+        setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         blueAdapter = BluetoothAdapter.getDefaultAdapter();
         //Phone does not support Bluetooth so let the user know and exit
@@ -52,6 +57,18 @@ public class BluetoothCommActivity extends AppCompatActivity implements DeviceLi
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.home:
+                startActivity(new Intent(this,MainActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -61,8 +78,6 @@ public class BluetoothCommActivity extends AppCompatActivity implements DeviceLi
 
     @Override
     public void onFragmentInteraction(String id) {
-        Intent intent = new Intent(this, SendAndGetDataActivity.class);
-        intent.putExtra("device_name", id);
-        startActivity(intent);
+        SendAndGetData.getInstance(this).start(id);
     }
 }

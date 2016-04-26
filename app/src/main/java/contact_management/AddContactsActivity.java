@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.abdielrosado.safecall.MainActivity;
 import com.example.abdielrosado.safecall.R;
 
 import java.util.ArrayList;
@@ -31,12 +34,16 @@ public class AddContactsActivity extends AppCompatActivity {
      * Message for when the user tries to add contacts and hasn't selected one.
      */
     private final String NO_SELECTION = "No Contacts Have Been Selected";
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_contacts);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         // Get list view and initialize class' lists
         ListView listView = (ListView) findViewById(R.id.listView2);
@@ -60,6 +67,23 @@ public class AddContactsActivity extends AppCompatActivity {
                 MyArrayAdapter.ADDING_CONTACTS);
         listView.setAdapter(arrayAdapter);
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.home:
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public static void addSelection(int selection){

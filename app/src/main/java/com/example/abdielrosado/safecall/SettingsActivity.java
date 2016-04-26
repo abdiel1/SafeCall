@@ -3,7 +3,10 @@ package com.example.abdielrosado.safecall;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
@@ -12,6 +15,7 @@ import java.util.Map;
 
 import btcomm.BluetoothCommActivity;
 import contact_management.ContactListManagement;
+import fall_detection.FallDetectionManagement;
 
 
 /**
@@ -21,11 +25,15 @@ public class SettingsActivity extends AppCompatActivity {
 
     private static final String TAG = "SETTINGSACTIVITY";
     private SettingsManager settingsManager;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //To toggle the switch for the Fall Detection on wearable device
         final Switch toggleOnWearableDetection = (Switch) findViewById(R.id.switch1);
@@ -66,6 +74,8 @@ public class SettingsActivity extends AppCompatActivity {
                     toggleOnPhoneDetection.setChecked(true);
                     settings.put(SettingsManager.ON_PHONE_FALL_DETECTION, true);
                     settingsManager.saveSettings(SettingsActivity.this);
+                    Intent intent = new Intent(SettingsActivity.this, FallDetectionManagement.class);
+                    startService(intent);
 
 
                 } else {
@@ -73,11 +83,29 @@ public class SettingsActivity extends AppCompatActivity {
                     toggleOnPhoneDetection.setChecked(false);
                     settings.put(SettingsManager.ON_PHONE_FALL_DETECTION, false);
                     settingsManager.saveSettings(SettingsActivity.this);
+                    stopService(new Intent(SettingsActivity.this, FallDetectionManagement.class));
 
                 }
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.home:
+                startActivity(new Intent(this, MainActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     public void onClickGoToContacts(View view){
