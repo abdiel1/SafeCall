@@ -30,18 +30,20 @@ import contact_management.ContactListManagement;
 public class SettingsManager {
 
     private static final String SETTINGS_FILE =  "Settings.txt";
-
     public static final String WD_FALL_DETECTION = "WDFD";
-
     public static final String ON_PHONE_FALL_DETECTION = "OPFD";
+    public static final String NAME = "NAME";
+
     private static final String TAG = "SETTINGSMANAGER";
 
     private Map<String,Boolean> settings;
+    private Map<String,String> profile;
 
     private static SettingsManager instance;
 
     public SettingsManager(Context context){
         settings = new HashMap<String,Boolean>();
+        profile = new HashMap<String , String>();
         loadSettings(context);
     }
 
@@ -64,6 +66,7 @@ public class SettingsManager {
     private void loadSettings(Context context){
         File file = new File(context.getFilesDir(),SETTINGS_FILE);
         settings.clear();
+        profile.clear();
         try{
             BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             try{
@@ -75,13 +78,17 @@ public class SettingsManager {
                     tokener = new JSONTokener(line);
                     jsonObject = (JSONObject) tokener.nextValue();
                     settings.put(WD_FALL_DETECTION, (Boolean) jsonObject.get(WD_FALL_DETECTION));
+                    settings.put(ON_PHONE_FALL_DETECTION, (Boolean) jsonObject.get(ON_PHONE_FALL_DETECTION));
+                    profile.put(NAME, (String) jsonObject.get(NAME));
 
                 }
             } catch (JSONException e){
-
+                Log.e(TAG, e.toString());
+            }finally {
+                in.close();
             }
         } catch(IOException e){
-
+            Log.e(TAG, e.toString());
         }
     }
 
@@ -97,17 +104,26 @@ public class SettingsManager {
                 jsonObject = new JSONObject();
                 jsonObject.put(WD_FALL_DETECTION,settings.get(WD_FALL_DETECTION));
                 jsonObject.put(ON_PHONE_FALL_DETECTION,settings.get(ON_PHONE_FALL_DETECTION));
+                jsonObject.put(NAME, profile.get(NAME));
 
                 fileWriter.write(jsonObject.toString() + "\n");
 
             } catch (JSONException ex){
-
+                Log.e(TAG, ex.toString());
             } finally {
                 fileWriter.close();
             }
         } catch (IOException e){
-
+            Log.e(TAG, e.toString());
         }
     }
+
+    public Map<String, String> getProfile(Context context){
+        if(profile.isEmpty()){
+            loadSettings(context);
+        }
+        return profile;
+    }
+
 }
 

@@ -37,10 +37,6 @@ public class SettingsActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
-
     }
 
     @Override
@@ -70,10 +66,6 @@ public class SettingsActivity extends AppCompatActivity {
             toggleOnWearableDetection.setChecked(false);
             toggleOnWearableDetection.setClickable(false);
         }
-
-
-
-
 
         toggleOnWearableDetection.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
