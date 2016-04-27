@@ -134,7 +134,9 @@ public class SendAndGetData {
                                 }
                                 else if (b == letterE){
                                     if(!Countdown.runningTimer.get()){
-                                        context.startActivity(new Intent(context,Countdown.class));
+                                        Intent intent = new Intent(context,Countdown.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        context.startActivity(intent);
                                     }
                                 }
                                 else if(b == letterF){

@@ -118,4 +118,9 @@ public class ContactListManagement extends AppCompatActivity implements
         dialogFragment.dismiss();
 
     }
+
+    @Override
+    public void onBackPressed(){
+        return;
+    }
 }

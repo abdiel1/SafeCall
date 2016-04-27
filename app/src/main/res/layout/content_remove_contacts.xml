@@ -20,7 +20,8 @@
         android:text="Remove Contacts"
         android:id="@+id/button4"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp" />
 
     <ListView
         android:layout_width="wrap_content"

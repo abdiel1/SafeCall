@@ -78,7 +78,7 @@ public class BluetoothCommActivity extends AppCompatActivity implements DeviceLi
 
     @Override
     public void onFragmentInteraction(String id) {
-        SendAndGetData.getInstance(this).start(id);
+        SendAndGetData.getInstance(getApplicationContext()).start(id);
         finish();
     }
 }

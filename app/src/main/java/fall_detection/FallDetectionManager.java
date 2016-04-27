@@ -63,12 +63,18 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
 
     private AtomicBoolean alarmOn;
 
+    private AtomicBoolean freeFall;
+
+    private int count;
+
     private Real multiplyFactor;
 
     private static FallDetectionManager instance;
 
     private FallDetectionManager() {
         alarmOn = new AtomicBoolean(false);
+        freeFall = new AtomicBoolean(false);
+        count = 0;
     }
 
     public static FallDetectionManager getInstance() {
@@ -107,6 +113,7 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
 
         if (previousValues[0] != 0) {
 
+
             double[] slopes = calculateSlope(event.values);
             if (slopes == null) {
                 return;
@@ -122,10 +129,12 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
 
 
 
-            Log.d("Mahalanobis",fallMahalanobisDistance.toString() + ", " + nonFallMahalanobisDistance.toString());
+//            Log.d("Mahalanobis",fallMahalanobisDistance.toString() + ", " + nonFallMahalanobisDistance.toString());
+            Log.d("Mahalanobis",new Boolean(freeFall.get()).toString());
 
             synchronized (this){
-                if ((fallMahalanobisDistance.minus(nonFallMahalanobisDistance).doubleValue() < -50) && !alarmOn.get()) {
+                if ((fallMahalanobisDistance.minus(nonFallMahalanobisDistance).doubleValue() < -10) && !alarmOn.get() && freeFall.get()) {
+//                if(fallMahalanobisDistance.doubleValue() < 1.5 && !alarmOn.get() && freeFall.get()){
                     Log.d("Fall", "Fall was detected");
                     //Log.d("FallMD",fallMahalanobisDistance.toString());
                     //Log.d("NFallMD",nonFallMahalanobisDistance.toString());
@@ -135,6 +144,16 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
                     notifyFallDetectionListeners();
                 }
             }
+
+            if((event.values[0] < 3.5 && event.values[0] > -3.5) && (event.values[1] < 3.5 && event.values[1] > -3.5) && (event.values[2] < 3.5 && event.values[2] > -3.5)){
+                    freeFall.set(true);
+                    count = 0;
+
+            }else if(count > 5){
+                freeFall.set(false);
+                count = 0;
+            }
+            count ++;
 
 
         } else {

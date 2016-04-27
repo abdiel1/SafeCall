@@ -140,4 +140,9 @@ public class Countdown extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed(){
+        return;
+    }
 }
