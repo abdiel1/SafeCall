@@ -51,7 +51,8 @@ public class Countdown extends AppCompatActivity {
 
         if(!runningTimer.get()){
             runningTimer.set(true);
-            mediaPlayer = MediaPlayer.create(this, R.raw.alarmringtone1305);
+            //TODO add the sound file
+//            mediaPlayer = MediaPlayer.create(this, R.raw.alarmringtone1305);
             mediaPlayer.start();
             runTimer();
         }

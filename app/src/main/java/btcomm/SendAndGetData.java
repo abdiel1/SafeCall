@@ -80,6 +80,13 @@ public class SendAndGetData {
         }
 
         Set<BluetoothDevice> pairedDevices = BTAdapter.getBondedDevices();
+        //TODO add the pairing
+//        BluetoothDevice deviceToConnectTo = BTAdapter.getRemoteDevice(id);
+//
+//        if(deviceToConnectTo.getBondState() == BluetoothDevice.BOND_NONE){
+//            deviceToConnectTo.createBond();
+//        }
+
         if(pairedDevices.size() > 0) {
             for(BluetoothDevice device : pairedDevices) {
                 if(device.getName().equals(id)) {

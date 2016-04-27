@@ -25,17 +25,13 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-
 //        startLocation();
         EmergencyManager emergencyManager = EmergencyManager.getInstance(getApplicationContext());
-
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -57,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void onCountdownClicked(View view){
         Intent intent = new Intent(this,Countdown.class);
+        startActivity(intent);
+    }
+
+    public void onClickGoToProfile(View view){
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
 
