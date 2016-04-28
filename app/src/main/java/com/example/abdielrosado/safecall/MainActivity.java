@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.view.Window;
 import emergency_protocol.EmergencyManager;
 import emergency_protocol.LocationManagement;
 import fall_detection.FallDetectionManagement;
+import twilio.TwilioCallActivity;
+import twilio.TwilioCallService;
 import twilio.TwilioPhone;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,8 +29,9 @@ public class MainActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-//        startLocation();
+        startLocation();
         EmergencyManager emergencyManager = EmergencyManager.getInstance(getApplicationContext());
+
     }
 
     @Override
@@ -70,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 locationManagement.requestLocation();
+                Log.d("Loction", "Location Requested.");
                 handler.postDelayed(this, LocationManagement.GPS_TIME_INTERVAL);
             }
         });
@@ -84,6 +89,12 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy(){
         super.onDestroy();
         TwilioPhone.stopTwilio();
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        stopService(new Intent(getApplicationContext(), TwilioCallService.class));
     }
 
 }

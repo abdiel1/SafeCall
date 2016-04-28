@@ -1,14 +1,12 @@
 package twilio;
 
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 
 import emergency_protocol.EmergencyManager;
 
@@ -23,7 +21,6 @@ public class TwilioCallService extends Service {
         @Override
         public void run() {
             emergencyManager.startEmergencyProtocol();
-            stopSelf();
         }
     };
 
@@ -51,12 +48,16 @@ public class TwilioCallService extends Service {
 
 
 
-    public void stopCall(){
-        emergencyManager.setCallInProgress(false);
+    public void setComplete(){
+        emergencyManager.setComplete();
     }
 
     public void acknowledgementReceived(){
         emergencyManager.setAckReceived(true);
+    }
+
+    public void stopEmergencyProtocol(){
+        emergencyManager.stopEmergencyProtocol();
     }
 
 

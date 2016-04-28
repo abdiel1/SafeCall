@@ -54,8 +54,11 @@ public class LocationManagement implements LocationListener {
 
         try {
             myLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
-            Toast.makeText(myContext, myLocation.getLatitude() + ", " + myLocation.getLongitude(),Toast.LENGTH_LONG).show();
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, GPS_TIME_INTERVAL, 100, this);
+            if(myLocation != null){
+                Toast.makeText(myContext,myLocation.getLatitude() + ", " + myLocation.getLongitude(),Toast.LENGTH_LONG).show();
+            }
+
         } catch (SecurityException e) {
             return;
         }

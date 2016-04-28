@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.abdielrosado.safecall.MainActivity;
 import com.example.abdielrosado.safecall.R;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,19 +30,30 @@ public class TwilioCallActivity extends AppCompatActivity{
     private TextView status;
     private static TwilioCallService twilioCallService;
     private static AtomicBoolean isBound = new AtomicBoolean(false);
+    private static String currentContact = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_twilio_main);
         status = (TextView) findViewById(R.id.call_status);
+        doBindService();
+
+
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d("Activity","Intent Received");
-                status.setText(intent.getStringExtra(EmergencyManager.EXTRA_CONTACT_NAME));
+                currentContact = intent.getStringExtra(EmergencyManager.EXTRA_CONTACT_NAME);
+                if(currentContact.equals("Done")){
+                    startActivity(new Intent(TwilioCallActivity.this, MainActivity.class));
+                    TwilioCallActivity.this.finish();
+                }
+                status.setText(currentContact);
             }
         },new IntentFilter(EmergencyManager.ACTION_CALL_STATUS));
+
+
         //Get Intent
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -53,7 +65,7 @@ public class TwilioCallActivity extends AppCompatActivity{
                     if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("ack")){
                         twilioCallService.acknowledgementReceived();
                     } else if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("completed")){
-                        twilioCallService.stopCall();
+                        twilioCallService.setComplete();
                     }
                 }
             }
@@ -63,25 +75,20 @@ public class TwilioCallActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
+        if(!currentContact.isEmpty()){
+            status.setText(currentContact);
+        }
         doBindService();
-
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (isBound.get()) {
-            doUnbindService();
-        }
-    }
-
-    public void onClickSetAck(View view) {
-
     }
 
     public void onClickDone(View view) {
         if (isBound.get()) {
-            twilioCallService.stopCall();
+            twilioCallService.stopEmergencyProtocol();
         }
 
     }
@@ -97,18 +104,21 @@ public class TwilioCallActivity extends AppCompatActivity{
         @Override
         public void onServiceDisconnected(ComponentName name) {
             twilioCallService = null;
+            isBound.set(false);
         }
     };
 
     private void doBindService() {
-        Intent intent = new Intent(this, TwilioCallService.class);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        isBound.set(true);
+        if(!isBound.get()){
+            Intent intent = new Intent(this, TwilioCallService.class);
+            getApplicationContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+            isBound.set(true);
+        }
     }
 
     private void doUnbindService() {
         if (isBound.get()) {
-            unbindService(serviceConnection);
+            getApplicationContext().unbindService(serviceConnection);
             isBound.set(false);
         }
     }
@@ -118,6 +128,7 @@ public class TwilioCallActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         doUnbindService();
+        isBound.set(false);
     }
 
     @Override
