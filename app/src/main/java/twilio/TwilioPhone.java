@@ -41,12 +41,11 @@ public class TwilioPhone implements Twilio.InitListener
         new RetrieveCapabilityToken().execute("http://maksolutions.herokuapp.com/token");
     }
 
-    public Device connect(String phoneNumber){
+    public Device connect(Map<String, String> parameters){
 
         try {
-            Map<String, String> parameters = new HashMap<String, String>();
-            Log.d(TAG, "Phonenumber: " + phoneNumber);
-            parameters.put("To", phoneNumber);
+            Log.d(TAG, "Will call: " + parameters.get("To"));
+
             connection = device.connect(parameters, null);
             if(connection == null){
                 Log.w(TAG, "Failed to create new connection.");

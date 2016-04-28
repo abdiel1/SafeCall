@@ -12,6 +12,8 @@ import android.content.Context;
 import com.twilio.client.Connection;
 import com.twilio.client.Device;
 
+import java.util.Map;
+
 public class CallCaregiver
 {
     private TwilioPhone phone;
@@ -29,9 +31,9 @@ public class CallCaregiver
         return callCaregiver;
     }
 
-    public Device connect(String number)
+    public Device connect(Map<String, String> params)
     {
-        return phone.connect(number);
+        return phone.connect(params);
     }
 
     public void disconnect()

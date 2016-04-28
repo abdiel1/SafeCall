@@ -10,10 +10,14 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
 
+import com.example.abdielrosado.safecall.SettingsManager;
 import com.twilio.client.Connection;
 import com.twilio.client.Device;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import twilio.CallCaregiver;
@@ -36,6 +40,8 @@ public class EmergencyManager{
     public static final String EXTRA_CONTACT_NAME = "Extra_Contact_Name";
     public static final String EXTRA_PHONE_NUMBER = "Extra_Phone_Number";
 
+    private static SettingsManager settingsManager;
+    private Map<String,String> profile;
     private CallCaregiver caregiver;
 
 
@@ -46,6 +52,8 @@ public class EmergencyManager{
 //        MessageReceiver msgReceiver = new MessageReceiver(context);
         caregiver = CallCaregiver.getInstance(context);
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        settingsManager = SettingsManager.getInstance(cont);
+
     }
 
     public static EmergencyManager getInstance(Context cont) {
@@ -71,9 +79,10 @@ public class EmergencyManager{
         LocationManagement locationManagement = LocationManagement.getInstance(context);
         final String location = locationManagement.getLocation();
 
-
         ContactListManager contactListManager = ContactListManager.getInstance();
         final List<Contact> contactList = contactListManager.getContactList(context);
+
+        profile = settingsManager.getProfile(context);
 
         final Handler handler = new Handler();
 
@@ -85,16 +94,32 @@ public class EmergencyManager{
                 Contact contact = contactList.get(count);
                 if (!isCallInProgress()) {
                     String phoneNumber = contact.getPhoneNumber();
-                    String name = contact.getName();
+                    String contactName = contact.getName();
+                    String username = "";
+                    Map<String, String> parameters = new HashMap<String, String>();
+                    profile = settingsManager.getProfile(context);
+
+                    if(profile != null){
+                        username = profile.get(SettingsManager.NAME);
+                    }
+                    if(!username.isEmpty()){
+                        parameters.put("Username",username);
+                    }
+                    if(!phoneNumber.isEmpty()){
+                        parameters.put("To", phoneNumber);
+                    }
+
 
                     //Turn on speaker
                     audioManager.setMode(AudioManager.MODE_IN_CALL);
                     audioManager.setSpeakerphoneOn(true);
 
-                    //device = caregiver.connect(phoneNumber);
+                    //Make call through Twilio
+                    device = caregiver.connect(parameters);
+
                     callInProgress.set(true);
                     Intent intent = new Intent(ACTION_CALL_STATUS);
-                    intent.putExtra(EXTRA_CONTACT_NAME,name);
+                    intent.putExtra(EXTRA_CONTACT_NAME,contactName);
                     intent.putExtra(EXTRA_PHONE_NUMBER,phoneNumber);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                     Log.d("Service","Intent Sent");
