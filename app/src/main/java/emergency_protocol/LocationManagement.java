@@ -5,6 +5,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 
 /**
@@ -15,10 +16,12 @@ public class LocationManagement implements LocationListener {
     public static final int GPS_TIME_INTERVAL = 900000;
     private static LocationManager locationManager;
     private static Location myLocation;
+    private static Context myContext;
     private boolean requestingUpdates;
     private static LocationManagement locationManagement;
 
     private LocationManagement(Context context) {
+        myContext = context;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         try {
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, GPS_TIME_INTERVAL, 100, this);
@@ -51,6 +54,7 @@ public class LocationManagement implements LocationListener {
 
         try {
             myLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+            Toast.makeText(myContext, myLocation.getLatitude() + ", " + myLocation.getLongitude(),Toast.LENGTH_LONG).show();
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, GPS_TIME_INTERVAL, 100, this);
         } catch (SecurityException e) {
             return;

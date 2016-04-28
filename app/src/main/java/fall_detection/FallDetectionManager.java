@@ -63,12 +63,18 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
 
     private AtomicBoolean alarmOn;
 
+    private AtomicBoolean freeFall;
+
+    private int count;
+
     private Real multiplyFactor;
 
     private static FallDetectionManager instance;
 
     private FallDetectionManager() {
         alarmOn = new AtomicBoolean(false);
+        freeFall = new AtomicBoolean(false);
+        count = 0;
     }
 
     public static FallDetectionManager getInstance() {
@@ -107,25 +113,29 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
 
         if (previousValues[0] != 0) {
 
+
             double[] slopes = calculateSlope(event.values);
             if (slopes == null) {
                 return;
             }
 
-            Real[][] sample = {{Real.valueOf(slopes[0])}, {Real.valueOf(slopes[1])}, {Real.valueOf(slopes[2])}};
+//            Real[][] sample = {{Real.valueOf(slopes[0])}, {Real.valueOf(slopes[1])}, {Real.valueOf(slopes[2])}};
+//
+//            DenseMatrix<Real> sampleMatrix = DenseMatrix.valueOf(sample);
+//            Real fallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, FALL_INVERSE_COVARIANCE_MATRIX,
+//                    FALL_MEANS_MATRIX);
+//            Real nonFallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, NON_FALL_INVERSE_COVARIANCE_MATRIX,
+//                    NON_FALL_MEANS_MATRIX);
 
-            DenseMatrix<Real> sampleMatrix = DenseMatrix.valueOf(sample);
-            Real fallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, FALL_INVERSE_COVARIANCE_MATRIX,
-                    FALL_MEANS_MATRIX);
-            Real nonFallMahalanobisDistance = calculateMahalanobisDistance(sampleMatrix, NON_FALL_INVERSE_COVARIANCE_MATRIX,
-                    NON_FALL_MEANS_MATRIX);
 
 
-
-            Log.d("Mahalanobis",fallMahalanobisDistance.toString() + ", " + nonFallMahalanobisDistance.toString());
+//            Log.d("Mahalanobis",fallMahalanobisDistance.toString() + ", " + nonFallMahalanobisDistance.toString());
+//            Log.d("Mahalanobis",new Boolean(freeFall.get()).toString() + fallMahalanobisDistance.toString());
 
             synchronized (this){
-                if ((fallMahalanobisDistance.minus(nonFallMahalanobisDistance).doubleValue() < -50) && !alarmOn.get()) {
+//                if ((fallMahalanobisDistance.minus(nonFallMahalanobisDistance).doubleValue() < -50) && !alarmOn.get() && freeFall.get()) {
+//                if(fallMahalanobisDistance.doubleValue() < 1.5 && !alarmOn.get() && freeFall.get()){
+                if((calculateMagnitude(event.values) - 96.2361) > 300 && !alarmOn.get() && freeFall.get()){
                     Log.d("Fall", "Fall was detected");
                     //Log.d("FallMD",fallMahalanobisDistance.toString());
                     //Log.d("NFallMD",nonFallMahalanobisDistance.toString());
@@ -137,6 +147,17 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
             }
 
 
+            if((calculateMagnitude(event.values) - 96.2361) < -60){
+                    freeFall.set(true);
+                    count = 0;
+
+            }else if(count > 5){
+                freeFall.set(false);
+                count = 0;
+            }
+            count ++;
+
+
         } else {
             previous_time = System.currentTimeMillis();
             previousValues[0] = event.values[0];
@@ -146,6 +167,10 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
         }
 
 
+    }
+
+    private float calculateMagnitude(float[] values){
+        return (values[0]*values[0] + values[1]*values[1] + values[2]*values[2]);
     }
 
     @Override

@@ -46,9 +46,10 @@ public class EmergencyManager{
 
 
     private EmergencyManager(Context cont) {
-        context = cont;
-        ackReceived = new AtomicBoolean(false);
-        callInProgress = new AtomicBoolean(false);
+        if(cont != null){
+            context = cont;
+            ackReceived = new AtomicBoolean(false);
+            callInProgress = new AtomicBoolean(false);
 //        MessageReceiver msgReceiver = new MessageReceiver(context);
         caregiver = CallCaregiver.getInstance(context);
         audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);

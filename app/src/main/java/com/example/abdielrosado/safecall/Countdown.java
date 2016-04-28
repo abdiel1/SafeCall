@@ -26,7 +26,7 @@ import twilio.TwilioCallActivity;
 
 public class Countdown extends AppCompatActivity {
 
-    private static volatile boolean stop;
+    private static AtomicBoolean stop;
     private static final String COUNT = "15.00";
     private static final int SLEEP_TIME = 100;
     private static final double INTERVAL = 0.1;
@@ -39,7 +39,7 @@ public class Countdown extends AppCompatActivity {
         setContentView(R.layout.activity_countdown);
         setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
 
-        stop = false;
+        stop = new AtomicBoolean(false);
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC),0);
 
@@ -51,9 +51,7 @@ public class Countdown extends AppCompatActivity {
 
         if(!runningTimer.get()){
             runningTimer.set(true);
-            //TODO add the sound file
-//            mediaPlayer = MediaPlayer.create(this, R.raw.alarmringtone1305);
-            mediaPlayer.start();
+            mediaPlayer = MediaPlayer.create(this, R.raw.alarmringtone1305);
             runTimer();
         }
 
@@ -78,14 +76,14 @@ public class Countdown extends AppCompatActivity {
     }
 
     public static void stop(){
-        stop = true;
+        stop.set(true);
         if(mediaPlayer.isPlaying()){
             mediaPlayer.stop();
         }
     }
 
     public void onStopClicked(View view){
-        stop = true;
+        stop.set(true);
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.reset();
@@ -96,6 +94,7 @@ public class Countdown extends AppCompatActivity {
         final TextView counter = (TextView) findViewById(R.id.counter);
         final RelativeLayout layout = (RelativeLayout) findViewById(R.id.countdownLayout);
         counter.setText(COUNT);
+        mediaPlayer.start();
 
         final Handler handler = new Handler();
 
@@ -123,7 +122,7 @@ public class Countdown extends AppCompatActivity {
                     Intent intent = new Intent(Countdown.this, TwilioCallActivity.class);
                     startActivity(intent);
                     runningTimer.set(false);
-                } else if(stop){
+                } else if(stop.get()){
                     counter.setText("STOPPED");
                     if(FallDetectionManagement.isRunning.get()){
                         FallDetectionManager.getInstance().alarmOff();
@@ -140,5 +139,10 @@ public class Countdown extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        return;
     }
 }

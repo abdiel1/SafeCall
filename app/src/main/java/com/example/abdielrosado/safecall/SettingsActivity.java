@@ -60,6 +60,8 @@ public class SettingsActivity extends AppCompatActivity {
             toggleOnWearableDetection.setChecked(temp == null ? false:temp);
             if(toggleOnWearableDetection.isChecked()){
                 sendAndGetData.sendDataToBT("E");
+            }else{
+                sendAndGetData.sendDataToBT("D");
             }
         }else{
             btConnect.setChecked(false);

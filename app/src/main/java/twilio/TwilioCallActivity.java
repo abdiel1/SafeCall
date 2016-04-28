@@ -119,4 +119,9 @@ public class TwilioCallActivity extends AppCompatActivity{
         super.onDestroy();
         doUnbindService();
     }
+
+    @Override
+    public void onBackPressed(){
+        return;
+    }
 }
