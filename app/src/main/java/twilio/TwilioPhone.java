@@ -32,6 +32,12 @@ public class TwilioPhone implements Twilio.InitListener
         }
     }
 
+    public static void stopTwilio(){
+        if(Twilio.isInitialized()){
+            Twilio.shutdown();
+        }
+    }
+
     /* Twilio.InitListener method */
     @Override
     public void onInitialized()

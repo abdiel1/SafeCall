@@ -13,6 +13,7 @@ import android.view.Window;
 import emergency_protocol.EmergencyManager;
 import emergency_protocol.LocationManagement;
 import fall_detection.FallDetectionManagement;
+import twilio.TwilioPhone;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,6 +78,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         return;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        TwilioPhone.stopTwilio();
     }
 
 }

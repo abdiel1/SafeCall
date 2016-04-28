@@ -40,12 +40,15 @@ public class EmergencyManager{
 
 
     private EmergencyManager(Context cont) {
-        context = cont;
-        ackReceived = new AtomicBoolean(false);
-        callInProgress = new AtomicBoolean(false);
+        if(cont != null){
+            context = cont;
+            ackReceived = new AtomicBoolean(false);
+            callInProgress = new AtomicBoolean(false);
 //        MessageReceiver msgReceiver = new MessageReceiver(context);
-        caregiver = CallCaregiver.getInstance(context);
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            caregiver = CallCaregiver.getInstance(context);
+            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        }
+
     }
 
     public static EmergencyManager getInstance(Context cont) {
@@ -91,7 +94,7 @@ public class EmergencyManager{
                     audioManager.setMode(AudioManager.MODE_IN_CALL);
                     audioManager.setSpeakerphoneOn(true);
 
-                    //device = caregiver.connect(phoneNumber);
+                    device = caregiver.connect(phoneNumber);
                     callInProgress.set(true);
                     Intent intent = new Intent(ACTION_CALL_STATUS);
                     intent.putExtra(EXTRA_CONTACT_NAME,name);

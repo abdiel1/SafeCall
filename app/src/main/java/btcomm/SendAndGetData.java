@@ -48,7 +48,7 @@ public class SendAndGetData {
     private AtomicBoolean connected;
 
 
-    public SendAndGetData(Context c){
+    private SendAndGetData(Context c){
         context = c;
         stopListeningThread = new AtomicBoolean(false);
         connected = new AtomicBoolean(false);
@@ -121,7 +121,7 @@ public class SendAndGetData {
 
         stopListeningThread.set(false);
         readBufferPosition = 0;
-        readBuffer = new byte[1024];
+        readBuffer = new byte[32];
         listeningThread = new Thread(new Runnable() {
             public void run() {
                 while(!Thread.currentThread().isInterrupted() && !stopListeningThread.get()) {
@@ -142,9 +142,10 @@ public class SendAndGetData {
                                 else if (b == letterE){
                                     if(!Countdown.runningTimer.get()){
                                         Intent intent = new Intent(context,Countdown.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         context.startActivity(intent);
                                     }
+
                                 }
                                 else if(b == letterF){
                                     if(Countdown.runningTimer.get()){
@@ -152,6 +153,9 @@ public class SendAndGetData {
                                     }
                                 }
                                 else {
+                                    if(readBufferPosition == readBuffer.length - 1){
+                                        readBufferPosition = 0;
+                                    }
                                     readBuffer[readBufferPosition++] = b;
                                 }
                             }
