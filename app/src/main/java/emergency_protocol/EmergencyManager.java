@@ -170,7 +170,7 @@ public class EmergencyManager {
                         intent.putExtra(EXTRA_CONTACT_NAME, "Done");
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
-                    }else if ((isAckReceived() && !complete.get()) || (!isAckReceived() && !complete.get())) {
+                    }else if (isAckReceived() && !complete.get()) {
                         if (isAckReceived()) {
                             Intent intent = new Intent(ACTION_CALL_STATUS);
                             intent.putExtra(EXTRA_CONTACT_NAME, "Online");
@@ -181,6 +181,8 @@ public class EmergencyManager {
 
                     }else if(!isAckReceived() && complete.get()){
                         callInProgress.set(false);
+                        handler.postDelayed(this, 2000);
+                    }else{
                         handler.postDelayed(this, 2000);
                     }
                 }
