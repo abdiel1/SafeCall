@@ -21,16 +21,19 @@ import com.example.abdielrosado.safecall.R;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import emergency_protocol.EmergencyManager;
+import gcm.MessageReceiver;
 
 /**
  * Created by abdielrosado on 4/18/16.
  */
 public class TwilioCallActivity extends AppCompatActivity{
 
+    private static final String TAG = "TwilioCallActivity";
     private TextView status;
     private static TwilioCallService twilioCallService;
     private static AtomicBoolean isBound = new AtomicBoolean(false);
     private static String currentContact = "";
+    private static String message = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,33 +46,48 @@ public class TwilioCallActivity extends AppCompatActivity{
         LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("Activity","Intent Received");
+                Log.d("Activity", "Intent Received");
                 currentContact = intent.getStringExtra(EmergencyManager.EXTRA_CONTACT_NAME);
-                if(currentContact.equals("Done")){
+                if (currentContact.equals("Done")) {
                     startActivity(new Intent(TwilioCallActivity.this, MainActivity.class));
                     TwilioCallActivity.this.finish();
                 }
                 status.setText(currentContact);
             }
-        },new IntentFilter(EmergencyManager.ACTION_CALL_STATUS));
+        }, new IntentFilter(EmergencyManager.ACTION_CALL_STATUS));
 
-
-        //Get Intent
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-
-        if(Intent.ACTION_SEND.equals(action)&& type != null){
-            if("text/plain".equals(type)){
+        LocalBroadcastManager.getInstance(getApplicationContext()).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                message = intent.getStringExtra(MessageReceiver.MESSAGE);
+                Log.d(TAG,"messageReceived - "+message);
                 if(isBound.get()){
-                    if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("ack")){
+                    if(message.equals("ack")){
                         twilioCallService.acknowledgementReceived();
-                    } else if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("completed")){
+                    } else if(message.equals("completed")){
                         twilioCallService.setComplete();
                     }
                 }
             }
-        }
+        },new IntentFilter(MessageReceiver.GCM_MESSAGE));
+
+
+        //Get Intent
+//        Intent intent = getIntent();
+//        String action = intent.getAction();
+//        String type = intent.getType();
+//
+//        if(Intent.ACTION_SEND.equals(action)&& type != null){
+//            if("text/plain".equals(type)){
+//                if(isBound.get()){
+//                    if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("ack")){
+//                        twilioCallService.acknowledgementReceived();
+//                    } else if(intent.getStringExtra(Intent.EXTRA_TEXT).equals("completed")){
+//                        twilioCallService.setComplete();
+//                    }
+//                }
+//            }
+//        }
     }
 
     @Override

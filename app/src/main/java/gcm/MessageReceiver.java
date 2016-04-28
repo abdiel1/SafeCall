@@ -15,6 +15,8 @@ import com.example.abdielrosado.safecall.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import emergency_protocol.EmergencyManager;
+
 /**
  * Created by Kenneth on 4/14/2016.
  */
@@ -29,6 +31,10 @@ public class MessageReceiver{
 
     private boolean isReceiverRegistered;
 
+    public static final String MESSAGE = "message";
+    public static final String GCM_MESSAGE = MessageReceiver.class.getName() + "GCMBroadcast";
+
+
     public MessageReceiver(Context cont) {
 
         context = cont;
@@ -40,8 +46,10 @@ public class MessageReceiver{
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
                 boolean sentToken = sharedPreferences.getBoolean(QuickstartPreferences.SENT_TOKEN_TO_SERVER, false);
                 if (sentToken) {
+                    Log.d(TAG, "Waiting for data...");
 //                    mInformationTextView.setText(getString(R.string.gcm_send_message));
                 } else {
+                    Log.d(TAG, "An error ocurred.");
 //                    mInformationTextView.setText(getString(R.string.token_error_message));
                 }
             }

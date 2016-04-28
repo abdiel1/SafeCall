@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import gcm.MessageReceiver;
 import twilio.CallCaregiver;
 import contact_management.Contact;
 import contact_management.ContactListManager;
@@ -55,7 +56,7 @@ public class EmergencyManager {
             callInProgress = new AtomicBoolean(false);
             stop = new AtomicBoolean(false);
             complete = new AtomicBoolean(false);
-//        MessageReceiver msgReceiver = new MessageReceiver(context);
+            MessageReceiver msgReceiver = new MessageReceiver(context);
             caregiver = CallCaregiver.getInstance(context);
             audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             settingsManager = SettingsManager.getInstance(cont);
@@ -131,8 +132,8 @@ public class EmergencyManager {
 
 
                         //Turn on speaker
-                        audioManager.setMode(AudioManager.MODE_IN_CALL);
-                        audioManager.setSpeakerphoneOn(true);
+//                        audioManager.setMode(AudioManager.MODE_IN_CALL);
+//                        audioManager.setSpeakerphoneOn(true);
 
                         //Make call through Twilio
 //                        device = caregiver.connect(parameters);
@@ -163,7 +164,7 @@ public class EmergencyManager {
 
 
                         //Turn off speaker
-                        audioManager.setMode(AudioManager.MODE_NORMAL);
+//                        audioManager.setMode(AudioManager.MODE_NORMAL);
                         Toast.makeText(context, "Finished", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(ACTION_CALL_STATUS);
                         intent.putExtra(EXTRA_CONTACT_NAME, "Done");

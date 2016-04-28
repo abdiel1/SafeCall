@@ -89,13 +89,13 @@
         </activity>
 
         <activity android:name="twilio.TwilioCallActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEND" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
 
-                <data android:mimeType="text/plain" />
-            </intent-filter>
+                <!--<data android:mimeType="text/plain" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <activity
@@ -121,8 +121,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="gcm.play.android.samples.com.gcmquickstart" />
+                <category android:name="com.example.abdielrosado.safecall" />
             </intent-filter>
         </receiver>
         <!-- [END gcm_receiver] -->
