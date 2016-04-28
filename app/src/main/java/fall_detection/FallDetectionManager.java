@@ -71,7 +71,7 @@ public class FallDetectionManager implements FallDetector, SensorEventListener {
     public synchronized void onSensorChanged(SensorEvent event) {
 
 
-        if ((calculateMagnitude(event.values) - 96.2361) > 100 && !alarmOn.get() && freeFall.get()) {
+        if ((calculateMagnitude(event.values) - 96.2361) > 90 && !alarmOn.get() && freeFall.get()) {
             Log.d("Fall", "Fall was detected");
             //Log.d("FallMD",fallMahalanobisDistance.toString());
             //Log.d("NFallMD",nonFallMahalanobisDistance.toString());

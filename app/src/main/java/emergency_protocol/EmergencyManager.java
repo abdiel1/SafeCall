@@ -40,6 +40,7 @@ public class EmergencyManager {
     private AtomicBoolean callInProgress;
     private AtomicBoolean stop;
     private AtomicBoolean complete;
+    private AtomicBoolean continues;
     public static final String ACTION_CALL_STATUS = EmergencyManager.class.getName() + "CallBroadcast";
     public static final String EXTRA_CONTACT_NAME = "Extra_Contact_Name";
     public static final String EXTRA_PHONE_NUMBER = "Extra_Phone_Number";
@@ -56,6 +57,7 @@ public class EmergencyManager {
             callInProgress = new AtomicBoolean(false);
             stop = new AtomicBoolean(false);
             complete = new AtomicBoolean(false);
+            continues = new AtomicBoolean(false);
             MessageReceiver msgReceiver = new MessageReceiver(context);
             caregiver = CallCaregiver.getInstance(context);
             audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
@@ -132,11 +134,11 @@ public class EmergencyManager {
 
 
                         //Turn on speaker
-//                        audioManager.setMode(AudioManager.MODE_IN_CALL);
-//                        audioManager.setSpeakerphoneOn(true);
+                        audioManager.setMode(AudioManager.MODE_IN_CALL);
+                        audioManager.setSpeakerphoneOn(true);
 
                         //Make call through Twilio
-//                        device = caregiver.connect(parameters);
+                        device = caregiver.connect(parameters);
 
                         callInProgress.set(true);
                         Intent intent = new Intent(ACTION_CALL_STATUS);
@@ -151,38 +153,38 @@ public class EmergencyManager {
                         } else {
                             count = 0;
                         }
+                        continues.set(true);
                     }
-                    if (isAckReceived() && complete.get()) {
+                    if (device.getState().equals(Device.State.BUSY)) {
+                        if(complete.get()){
+                            String location = locationManagement.getLocation();
+                            //Send Text Message
+                            if (location != null) {
+                                String message = EMERGENCY_MESSAGE + "http://maps.google.com/?q=" + location;
+                                SmsManager smsManager = SmsManager.getDefault();
+                                smsManager.sendTextMessage(contact.getPhoneNumber(), null, message, null, null);
+                            }
 
-                        String location = locationManagement.getLocation();
-                        //Send Text Message
-                        if (location != null) {
-                            String message = EMERGENCY_MESSAGE + "http://maps.google.com/?q=" + location;
-                            SmsManager smsManager = SmsManager.getDefault();
-                            smsManager.sendTextMessage(contact.getPhoneNumber(), null, message, null, null);
-                        }
 
+                            //Turn off speaker
+                        audioManager.setMode(AudioManager.MODE_NORMAL);
+                            Toast.makeText(context, "Finished", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(ACTION_CALL_STATUS);
+                            intent.putExtra(EXTRA_CONTACT_NAME, "Done");
+                            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
 
-                        //Turn off speaker
-//                        audioManager.setMode(AudioManager.MODE_NORMAL);
-                        Toast.makeText(context, "Finished", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(ACTION_CALL_STATUS);
-                        intent.putExtra(EXTRA_CONTACT_NAME, "Done");
-                        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
-
-                    }else if (isAckReceived() && !complete.get()) {
-                        if (isAckReceived()) {
+                        }else {
                             Intent intent = new Intent(ACTION_CALL_STATUS);
                             intent.putExtra(EXTRA_CONTACT_NAME, "Online");
                             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+                            continues.set(true);
                         }
 
-                        handler.postDelayed(this, 2000);
-
-                    }else if(!isAckReceived() && complete.get()){
+                    }else if(complete.get() && !ackReceived.get()){
                         callInProgress.set(false);
-                        handler.postDelayed(this, 2000);
-                    }else{
+                        continues.set(true);
+                    }
+                    if(continues.get()){
                         handler.postDelayed(this, 2000);
                     }
                 }

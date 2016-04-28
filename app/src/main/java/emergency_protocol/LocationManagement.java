@@ -5,6 +5,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -55,9 +57,6 @@ public class LocationManagement implements LocationListener {
         try {
             myLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, GPS_TIME_INTERVAL, 100, this);
-            if(myLocation != null){
-                Toast.makeText(myContext,myLocation.getLatitude() + ", " + myLocation.getLongitude(),Toast.LENGTH_LONG).show();
-            }
 
         } catch (SecurityException e) {
             return;
