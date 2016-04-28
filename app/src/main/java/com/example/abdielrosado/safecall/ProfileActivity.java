@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 public class ProfileActivity extends AppCompatActivity {
 
+    private static final String TAG = "ProfileActivity";
     private SettingsManager settingsManager;
     private static Button updateBT;
     private static EditText nameEditText;
@@ -29,15 +31,22 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         updateBT = (Button) findViewById(R.id.profileButton);
         nameEditText = (EditText) findViewById(R.id.nameEditText);
+        settingsManager = SettingsManager.getInstance(getApplicationContext());
         if(savedInstanceState != null){
             updateBT.setText(savedInstanceState.getString("buttonState"));
             nameEditText.setText(savedInstanceState.getString("nameText"));
         }
 
-        setContentView(R.layout.activity_profile);
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try{
+            setContentView(R.layout.activity_profile);
+            toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }catch (NullPointerException e){
+            Log.e(TAG, e.toString());
+        }
+
+
     }
 
     @Override
@@ -74,14 +83,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
         updateBT = (Button) findViewById(R.id.profileButton);
         nameEditText = (EditText) findViewById(R.id.nameEditText);
-        settingsManager = SettingsManager.getInstance(getApplicationContext());
 
-        final Map<String,String> profile = settingsManager.getProfile(getApplicationContext());
+        Map<String,String> profile = settingsManager.getProfile(getApplicationContext());
         this.name = profile.get(SettingsManager.NAME);
         if(this.name != null){
             nameEditText.setEnabled(false);
             nameEditText.setText(this.name);
-            updateBT.setText(R.string.edit);
+//            updateBT.setText(R.string.edit);
         }else {
             updateBT.setText(R.string.save);
             nameEditText.setEnabled(true);

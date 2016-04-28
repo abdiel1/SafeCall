@@ -134,8 +134,8 @@ public class EmergencyManager {
 
 
                         //Turn on speaker
-                        audioManager.setMode(AudioManager.MODE_IN_CALL);
-                        audioManager.setSpeakerphoneOn(true);
+//                        audioManager.setMode(AudioManager.MODE_IN_CALL);
+//                        audioManager.setSpeakerphoneOn(true);
 
                         //Make call through Twilio
                         device = caregiver.connect(parameters);
@@ -167,7 +167,7 @@ public class EmergencyManager {
 
 
                             //Turn off speaker
-                        audioManager.setMode(AudioManager.MODE_NORMAL);
+//                        audioManager.setMode(AudioManager.MODE_NORMAL);
                             Toast.makeText(context, "Finished", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(ACTION_CALL_STATUS);
                             intent.putExtra(EXTRA_CONTACT_NAME, "Done");
