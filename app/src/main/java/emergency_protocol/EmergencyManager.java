@@ -46,15 +46,16 @@ public class EmergencyManager{
 
 
     private EmergencyManager(Context cont) {
-        if(cont != null){
+        if (cont != null) {
             context = cont;
             ackReceived = new AtomicBoolean(false);
             callInProgress = new AtomicBoolean(false);
 //        MessageReceiver msgReceiver = new MessageReceiver(context);
-        caregiver = CallCaregiver.getInstance(context);
-        audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        settingsManager = SettingsManager.getInstance(cont);
+            caregiver = CallCaregiver.getInstance(context);
+            audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            settingsManager = SettingsManager.getInstance(cont);
 
+        }
     }
 
     public static EmergencyManager getInstance(Context cont) {
